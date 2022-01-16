@@ -24,18 +24,20 @@ import java.util.stream.Collectors;
 public class JwtUtils {
 
     private Key secreteKey;
+
     private Long tokenValidityInMilliseconds;
+
     private String role = "role";
 
     public JwtUtils(@Value("${jwt.secret}") String secret,
                     @Value("${jwt.token-validity-in-seconds}") Long tokenValidityInMilliseconds) {
         String encodedSecrete = Encoders.BASE64.encode(secret.getBytes(StandardCharsets.UTF_8));
 
-        secreteKey = Keys.hmacShaKeyFor(encodedSecrete.getBytes(StandardCharsets.UTF_8));
-        tokenValidityInMilliseconds = tokenValidityInMilliseconds;
+        this.secreteKey = Keys.hmacShaKeyFor(encodedSecrete.getBytes(StandardCharsets.UTF_8));
+        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
     }
 
-    public String createToken(Authentication authentication){
+    public String createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map((authority) -> authority.getAuthority())
                 .collect(Collectors.joining(","));
@@ -44,7 +46,7 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(role, authentication)
+                .claim(role, authorities)
                 .signWith(secreteKey, SignatureAlgorithm.HS512)
                 .setExpiration(expireDate)
                 .compact();

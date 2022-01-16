@@ -36,6 +36,8 @@ public class JsonSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserInfoRepository userInfoRepository;
 
+    private final JwtUtils jwtUtils;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -67,7 +69,7 @@ public class JsonSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JsonAuthenticationSuccessHandler jsonAuthenticationSuccessHandler(){
-        return new JsonAuthenticationSuccessHandler();
+        return new JsonAuthenticationSuccessHandler(objectMapper, jwtUtils);
     }
 
     @Bean
