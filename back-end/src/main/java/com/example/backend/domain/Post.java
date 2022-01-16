@@ -32,14 +32,21 @@ public class Post extends BaseEntity{
     private UserInfo author;
 
     @ManyToOne
-    @JoinColumn(name = "CATEGORY", nullable = true)
+    @JoinColumn(name = "CATEGORY", nullable = true, referencedColumnName = "CATEGORY_NAME")
     private Category category;
+
+    // ==== 연관관계 편의 메서드 ==== //
+    public void changPost(Category category){
+        this.category = category;
+        this.category
+                .getPosts();
+    }
 
     public Post updatePost(Post post) {
         this.title = post.title;
         this.subTitle = post.subTitle;
         this.content = post.content;
-
+        changPost(post.getCategory());
         return this;
     }
 }

@@ -1,9 +1,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.controller.dto.RequestPost;
+import com.example.backend.domain.Category;
 import com.example.backend.domain.Post;
 import com.example.backend.exception.PostDeleteFailException;
 import com.example.backend.exception.PostSaveFailException;
+import com.example.backend.service.CategoryService;
 import com.example.backend.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -36,12 +38,15 @@ class PostControllerTest {
     @MockBean
     private PostService postService;
 
+    @MockBean
+    private CategoryService categoryService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void getAllTest() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get("/posts"));
+        ResultActions resultActions = mockMvc.perform(get("/api/posts"));
 
         resultActions
                 .andExpect(status().isOk());
@@ -67,9 +72,9 @@ class PostControllerTest {
 
         given(postService.savePost(any(Post.class))).willReturn(post);
 
-        String requestBody = objectMapper.writeValueAsString(post);
+        String requestBody = objectMapper.writeValueAsString(requestPost);
 
-        ResultActions resultActions = mockMvc.perform(post("/new")
+        ResultActions resultActions = mockMvc.perform(post("/api/new")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -103,7 +108,7 @@ class PostControllerTest {
 
         String requestBody = objectMapper.writeValueAsString(post);
 
-        ResultActions resultActions = mockMvc.perform(post("/new")
+        ResultActions resultActions = mockMvc.perform(post("/api/new")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -119,7 +124,7 @@ class PostControllerTest {
     void deletePostTest() throws Exception {
         Long id = 1L;
 
-        ResultActions resultActions = mockMvc.perform(delete("/delete/"+id));
+        ResultActions resultActions = mockMvc.perform(delete("/api/delete/"+id));
 
         resultActions
                 .andExpect(status().isOk())
@@ -128,4 +133,45 @@ class PostControllerTest {
         verify(postService).deletePost(1L);
     }
 
+    @Test
+    void saveCategoryTest() throws Exception {
+        String title = "Title";
+        String subTitle = "subTitle";
+        String content = "content";
+        String category = "category";
+
+        RequestPost requestPost = new RequestPost();
+        requestPost.setTitle(title);
+        requestPost.setTitle(subTitle);
+        requestPost.setContent(content);
+        requestPost.setCategory(category);
+
+        Category category1 = Category.builder()
+                .name(category)
+                .build();
+
+        Post post = Post.builder()
+                .id(1L)
+                .title(title)
+                .subTitle(subTitle)
+                .content(content)
+                .build();
+
+        given(categoryService.saveOrFindCategory(category)).willReturn(category1);
+        post.changPost(category1);
+        given(postService.savePost(any(Post.class))).willReturn(post);
+
+        String requestBody = objectMapper.writeValueAsString(requestPost);
+
+        ResultActions resultActions = mockMvc.perform(post("/api/new")
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andDo(print());
+
+        verify(postService).savePost(any(Post.class));
+    }
 }

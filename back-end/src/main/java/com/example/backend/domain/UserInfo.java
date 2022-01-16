@@ -3,6 +3,7 @@ package com.example.backend.domain;
 import com.example.backend.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
 public class UserInfo extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,12 @@ public class UserInfo extends BaseEntity {
     @Column(name = "USERROLE", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role userRole;
+
+    @Builder
+    public UserInfo(String username, String email, String password, Role userRole) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.userRole = userRole;
+    }
 }

@@ -11,4 +11,5 @@ public class RequestPost {
     private String title;
     private String subTitle;
     private String content;
+    private String category;
 }

@@ -1,7 +1,10 @@
 package com.example.backend.controller;
 
 import com.example.backend.controller.dto.RequestPost;
+import com.example.backend.domain.Category;
 import com.example.backend.domain.Post;
+import com.example.backend.repository.CategoryRepository;
+import com.example.backend.service.CategoryService;
 import com.example.backend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +21,11 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class PostController {
 
     private final PostService postService;
+    private final CategoryService categoryService;
 
     @GetMapping("/hello")
     public String hello(){
@@ -36,12 +41,15 @@ public class PostController {
 
     @PostMapping("/new")
     public ResponseEntity createPost(@RequestBody RequestPost requestPost){
+        Category category = categoryService.saveOrFindCategory(requestPost.getCategory());
+
         Post post = Post.builder()
                 .title(requestPost.getTitle())
                 .subTitle(requestPost.getSubTitle())
                 .content(requestPost.getContent())
                 .build();
 
+        post.changPost(category);
         Post savedPost = postService.savePost(post);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()

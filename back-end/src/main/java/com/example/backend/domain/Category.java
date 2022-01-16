@@ -2,15 +2,18 @@ package com.example.backend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class Category extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,5 +23,5 @@ public class Category extends BaseEntity{
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Post> post;
+    private List<Post> posts = new ArrayList<>();
 }
