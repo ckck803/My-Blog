@@ -4,6 +4,7 @@ spring:
     hikari:
       username: sa
       password:
+    url: jdbc:h2:mem:blog
 
   h2:
     console:
@@ -17,3 +18,18 @@ spring:
         show_sql: true
         format_sql: true
 
+security:
+  url:
+    login: /api/login
+    signup: /api/signup
+
+jwt:
+  header: Token
+  secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
+  token-validity-in-seconds: 86400000
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
