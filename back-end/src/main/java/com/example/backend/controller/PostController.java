@@ -1,9 +1,10 @@
 package com.example.backend.controller;
 
-import com.example.backend.controller.dto.RequestPost;
+import com.example.backend.controller.dto.RequestPostDto;
+import com.example.backend.controller.dto.ResponsePostDto;
+import com.example.backend.controller.dto.ResponsePostListDto;
 import com.example.backend.domain.Category;
 import com.example.backend.domain.Post;
-import com.example.backend.repository.CategoryRepository;
 import com.example.backend.service.CategoryService;
 import com.example.backend.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.annotation.PostConstruct;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -34,19 +36,41 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity getPosts(@PageableDefault(page = 0, size = 10) Pageable pageable){
+//        System.out.println("pageable = " + pageable);
         Page<Post> allPosts = postService.getAllPosts(pageable);
+        Integer pageLimit = allPosts.getNumberOfElements() / allPosts.getSize();
+        ResponsePostListDto postListDto = ResponsePostListDto
+                .builder()
+                .postList(allPosts.getContent())
+                .numOfElements(allPosts.getNumberOfElements())
+                .totalElements(allPosts.getTotalElements())
+                .pagingSize(allPosts.getSize())
+                .pageIndex(allPosts.getNumber())
+                .pageLimit(allPosts.getNumberOfElements()/allPosts.getSize())
+                .build();
 
-        return ResponseEntity.ok(allPosts);
+
+        return ResponseEntity.ok(postListDto);
     }
+//
+//    @PostMapping("/file/update")
+//    public ResponseEntity createPost(@RequestParam("file") MultipartFile multipartFile){
+//
+//        if(multipartFile.isEmpty()){
+//            log.info("File is Empty");
+//        }
+//
+//        return "";
+//    }
 
     @PostMapping("/new")
-    public ResponseEntity createPost(@RequestBody RequestPost requestPost){
-        Category category = categoryService.saveOrFindCategory(requestPost.getCategory());
+    public ResponseEntity createPost(@RequestBody RequestPostDto requestPostDto){
+        Category category = categoryService.saveOrFindCategory(requestPostDto.getCategory());
 
         Post post = Post.builder()
-                .title(requestPost.getTitle())
-                .subTitle(requestPost.getSubTitle())
-                .content(requestPost.getContent())
+                .title(requestPostDto.getTitle())
+                .subTitle(requestPostDto.getSubTitle())
+                .content(requestPostDto.getContent())
                 .build();
 
         post.changPost(category);
@@ -60,6 +84,29 @@ public class PostController {
         return ResponseEntity.created(uri).build();
     }
 
+    @GetMapping("/post/{id}")
+    public ResponseEntity retrievePost(@PathVariable("id") Long id){
+        Post post = postService.getPost(id);
+
+        ResponsePostDto dto = ResponsePostDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .subTitle(post.getSubTitle())
+                .content(post.getContent())
+//                .author(post.getAuthor().getUsername())
+//                .category(post.getCategory().getName())
+                .createdTime(post.getCreatedTime())
+                .lastModifiedTime(post.getLastModifiedTime())
+                .build();
+//
+//        URI url = ServletUriComponentsBuilder.fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(post.getId())
+//                .toUri();
+//
+        return ResponseEntity.ok(post);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity deletePost(@PathVariable("id") Long id){
         postService.deletePost(id);
@@ -68,15 +115,37 @@ public class PostController {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity updatePost(@PathVariable("id") Long id, @RequestBody RequestPost requestPost){
+    public ResponseEntity updatePost(@PathVariable("id") Long id, @RequestBody RequestPostDto requestPostDto){
         Post post = Post.builder()
-                .title(requestPost.getTitle())
-                .subTitle(requestPost.getSubTitle())
-                .content(requestPost.getContent())
+                .title(requestPostDto.getTitle())
+                .subTitle(requestPostDto.getSubTitle())
+                .content(requestPostDto.getContent())
                 .build();
 
         postService.updatePost(id, post);
 
         return ResponseEntity.ok().build();
     }
+
+    @PostConstruct
+    public void init(){
+        Post post = Post.builder()
+                .title("test1")
+                .subTitle("test1")
+                .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus in massa tempor nec feugiat nisl pretium. Vehicula ipsum a arcu cursus. At auctor urna nunc id cursus metus aliquam eleifend mi. Nunc mattis enim ut tellus elementum sagittis. Sed euismod nisi porta lorem. Praesent elementum facilisis leo vel fringilla. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Quis lectus nulla at volutpat diam. Erat velit scelerisque in dictum. Nisl suscipit adipiscing bibendum est ultricies. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam sit amet nisl purus in mollis nunc.\n" +
+                        "\n" +
+                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
+                .build();
+        postService.savePost(post);
+
+        Post post2 = Post.builder()
+                .title("test2")
+                .subTitle("test2")
+                .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus in massa tempor nec feugiat nisl pretium. Vehicula ipsum a arcu cursus. At auctor urna nunc id cursus metus aliquam eleifend mi. Nunc mattis enim ut tellus elementum sagittis. Sed euismod nisi porta lorem. Praesent elementum facilisis leo vel fringilla. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Quis lectus nulla at volutpat diam. Erat velit scelerisque in dictum. Nisl suscipit adipiscing bibendum est ultricies. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam sit amet nisl purus in mollis nunc.\n" +
+                        "\n" +
+                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
+                .build();
+        postService.savePost(post2);
+    }
 }
+

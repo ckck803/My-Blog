@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
 @RequestMapping("/api")
@@ -24,5 +25,14 @@ public class AuthController {
         UserInfo userinfo = userInfoService.save(registerUser);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostConstruct
+    public void init(){
+        RequestRegisterUser registerUser = new RequestRegisterUser();
+        registerUser.setUsername("test");
+        registerUser.setEmail("test@test.com");
+        registerUser.setPassword("1234");
+        userInfoService.save(registerUser);
     }
 }

@@ -28,7 +28,7 @@ public class Post extends BaseEntity{
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "AUTHOR_ID", nullable = false)
+    @JoinColumn(name = "AUTHOR_ID", nullable = true)
     private UserInfo author;
 
     @ManyToOne

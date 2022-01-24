@@ -1,26 +1,21 @@
 package com.example.backend.controller;
 
-import com.example.backend.controller.dto.RequestPost;
+import com.example.backend.controller.dto.RequestPostDto;
 import com.example.backend.domain.Category;
 import com.example.backend.domain.Post;
-import com.example.backend.exception.PostDeleteFailException;
 import com.example.backend.exception.PostSaveFailException;
 import com.example.backend.service.CategoryService;
 import com.example.backend.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doThrow;
@@ -58,10 +53,10 @@ class PostControllerTest {
         String subTitle = new String("subTitle");
         String content = new String("content");
 
-        RequestPost requestPost = new RequestPost();
-        requestPost.setTitle(title);
-        requestPost.setTitle(subTitle);
-        requestPost.setContent(content);
+        RequestPostDto requestPostDto = new RequestPostDto();
+        requestPostDto.setTitle(title);
+        requestPostDto.setTitle(subTitle);
+        requestPostDto.setContent(content);
 
         Post post = Post.builder()
                 .id(1L)
@@ -72,7 +67,7 @@ class PostControllerTest {
 
         given(postService.savePost(any(Post.class))).willReturn(post);
 
-        String requestBody = objectMapper.writeValueAsString(requestPost);
+        String requestBody = objectMapper.writeValueAsString(requestPostDto);
 
         ResultActions resultActions = mockMvc.perform(post("/api/new")
                 .content(requestBody)
@@ -92,10 +87,10 @@ class PostControllerTest {
         String subTitle = new String("subTitle");
         String content = new String("content");
 
-        RequestPost requestPost = new RequestPost();
-        requestPost.setTitle(title);
-        requestPost.setTitle(subTitle);
-        requestPost.setContent(content);
+        RequestPostDto requestPostDto = new RequestPostDto();
+        requestPostDto.setTitle(title);
+        requestPostDto.setTitle(subTitle);
+        requestPostDto.setContent(content);
 
         Post post = Post.builder()
                 .id(1L)
@@ -140,11 +135,11 @@ class PostControllerTest {
         String content = "content";
         String category = "category";
 
-        RequestPost requestPost = new RequestPost();
-        requestPost.setTitle(title);
-        requestPost.setTitle(subTitle);
-        requestPost.setContent(content);
-        requestPost.setCategory(category);
+        RequestPostDto requestPostDto = new RequestPostDto();
+        requestPostDto.setTitle(title);
+        requestPostDto.setTitle(subTitle);
+        requestPostDto.setContent(content);
+        requestPostDto.setCategory(category);
 
         Category category1 = Category.builder()
                 .name(category)
@@ -161,7 +156,7 @@ class PostControllerTest {
         post.changPost(category1);
         given(postService.savePost(any(Post.class))).willReturn(post);
 
-        String requestBody = objectMapper.writeValueAsString(requestPost);
+        String requestBody = objectMapper.writeValueAsString(requestPostDto);
 
         ResultActions resultActions = mockMvc.perform(post("/api/new")
                 .content(requestBody)
