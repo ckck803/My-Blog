@@ -11,9 +11,9 @@ const BlogRoute = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/post" element={<PostPage />} />
+          <Route path="/post/:id" element={<PostPage />} />
           <Route path="/edit" element={<EditPage />} />
-          <Route path="/login" />
+          {/* <Route path="/login" /> */}
         </Routes>
       </BrowserRouter>
     </Fragment>

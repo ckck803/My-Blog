@@ -1,0 +1,19 @@
+// LOGIN
+export const LOGIN_REQUEST = "login/LOGIN_REQUEST";
+export const LOGIN_SUCCESS = "login/LOGIN_SUCCESS";
+export const LOGIN_FAILURE = "login/LOGIN_FAILURE";
+
+// SIGNUP
+export const SIGNUP_REQUEST = "signup/SIGNUP_REQUEST";
+export const SIGNUP_SUCCESS = "signup/SIGNUP_SUCCESS";
+export const SIGNUP_FAILURE = "signup/SIGNUP_FAILURE";
+
+// POST_WRITE
+export const POST_WRITE_REQUEST = "post/POST_WRITE_REQUEST";
+export const POST_WRITE_SUCCESS = "post/POST_WRITE_SUCCESS";
+export const POST_WRITE_FAILURE = "post/POST_WRITE_FAILURE";
+
+// POSTS_LOADING
+export const POST_LOADING_REQUEST = "post/POST_LOADING_REQUEST";
+export const POST_LOADING_SUCCESS = "post/POST_LOADING_SUCCESS";
+export const POST_LAODING_FAILURE = "post/POST_LAODING_FAILURE";
