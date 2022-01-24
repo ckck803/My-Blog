@@ -1,30 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getPostListRequest } from "../redux/reducer/PostListReducer";
 import Pagenation from "./fragments/Pagenation";
+import PostListItem from "./PostListItem";
+import { useCallback } from "react";
 
-const PostList = () => {
+const PostList = ({ pageIndex, page }) => {
+  const postList = useSelector((state) => state.postList);
+
   return (
     <div>
-      <h1 class="my-4">
-        Page Heading
-        <small>Secondary Text</small>
-      </h1>
+      <h1 className="my-4">Page Heading</h1>
       <div className="card mb-4">
-        <img
-          className="card-img-top"
-          src="http://placehold.it/750x300"
-          alt="Card image cap"
-        />
-        <div className="card-body">
-          <h2 className="card-title"></h2>
-          <p className="card-text"></p>
-          <a href="#" className="btn btn-primary">
-            Read More &rarr;
-          </a>
-        </div>
-        <div className="card-footer text-muted">
-          Posted on January 1, 2020 by
-          <a href="#">Start Bootstrap</a>
-        </div>
+        {postList.posts &&
+          postList.posts.map((post) => {
+            return <PostListItem key={post.id} post={post} />;
+          })}{" "}
       </div>
       <Pagenation />
     </div>

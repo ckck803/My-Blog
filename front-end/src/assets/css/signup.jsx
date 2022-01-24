@@ -70,7 +70,7 @@ export const SignUpBody = styled.div`
     padding-left: 15px;
     padding-right: 15px;
     width: 290px;
-    height: 30px;
+    height: 40px;
     font-size: 14px;
     border: 1px solid rgb(222, 226, 230);
   }

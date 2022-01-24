@@ -1,14 +1,6 @@
 import React, { Fragment, useState } from "react";
-import {
-  Collapse,
-  Container,
-  Nav,
-  Navbar,
-  NavbarToggler,
-  NavLink,
-} from "reactstrap";
+import { Collapse, Container, Nav, Navbar, NavbarToggler } from "reactstrap";
 import { Link } from "react-router-dom";
-import LoginPage from "../../pages/LoginPage";
 import LoginModal from "../modals/LoginModal";
 import SignupModal from "../modals/SignupModal";
 
@@ -53,10 +45,15 @@ const Header = () => {
                   About
                 </Link>
               </Nav>
-              <Nav className="nav-item ml-auto d-felx">
+              {/* <Nav className="nav-item ml-auto d-felx">
                 <a className="nav-link" href="#">
                   Contact
                 </a>
+              </Nav> */}
+              <Nav className="nav-item ml-auto d-felx">
+                <Link to={"/edit"} className="nav-link">
+                  New
+                </Link>
               </Nav>
               <Nav>
                 {!false && (

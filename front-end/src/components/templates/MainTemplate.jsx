@@ -1,5 +1,6 @@
 import React from "react";
 import { Row } from "reactstrap";
+import Footer from "../fragments/Footer";
 import Header from "../fragments/Header";
 import Category from "../widgets/Category";
 import Search from "../widgets/Search";
@@ -19,6 +20,7 @@ const MainTemplate = ({ children }) => {
           </div>
         </Row>
       </div>
+      <Footer />
     </div>
   );
 };
