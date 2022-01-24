@@ -35,11 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+
         if(!isExclusiveUrl(request)){
             String token = "";
             String tokenHeader = request.getHeader("Authorization");
 
             if(tokenHeader != null && tokenHeader.startsWith("Bearer")){
+                log.info("tokenHeader : {}", tokenHeader);
                 token = tokenHeader.substring(7);
             }
 

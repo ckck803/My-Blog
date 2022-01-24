@@ -4,8 +4,10 @@ import com.example.backend.security.dto.LoginDto;
 import com.example.backend.security.token.JsonAuthenticationToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@Slf4j
 public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private final ObjectMapper objectMapper;
@@ -53,13 +56,14 @@ public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFi
         }
 
         JsonAuthenticationToken jsonAuthenticationToken = new JsonAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-        getAuthenticationManager().authenticate(jsonAuthenticationToken);
-
-        return jsonAuthenticationToken;
+        return this.getAuthenticationManager().authenticate(jsonAuthenticationToken);
     }
 
     private boolean isApplicationJSON(HttpServletRequest httpServletRequest){
-        if(httpServletRequest.getHeader("Content-type").equals(MediaType.APPLICATION_JSON_VALUE)){
+        log.info("Request Header : {} ", httpServletRequest.getHeader(HttpHeaders.CONTENT_TYPE));
+        log.info("Request Header : {} ", httpServletRequest.getHeader(HttpHeaders.ACCEPT));
+
+        if(httpServletRequest.getHeader(HttpHeaders.CONTENT_TYPE).equals(MediaType.APPLICATION_JSON_VALUE)){
             return true;
         }
         return false;

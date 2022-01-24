@@ -38,6 +38,7 @@ public class JwtUtils {
     }
 
     public String createToken(Authentication authentication) {
+
         String authorities = authentication.getAuthorities().stream()
                 .map((authority) -> authority.getAuthority())
                 .collect(Collectors.joining(","));
@@ -61,7 +62,9 @@ public class JwtUtils {
 
         String[] roles = body.get(role).toString().split(",");
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(roles).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                Arrays.stream(roles)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
         User user = new User(body.getSubject(), "", authorities);
 
