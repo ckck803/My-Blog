@@ -1,5 +1,6 @@
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,11 +28,13 @@ public class Post extends BaseEntity{
     @Lob
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "AUTHOR_ID", nullable = true)
     private UserInfo author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "CATEGORY", nullable = true, referencedColumnName = "CATEGORY_NAME")
     private Category category;
 

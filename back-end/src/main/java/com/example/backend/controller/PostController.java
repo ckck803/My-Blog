@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -35,13 +38,26 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity getPosts(@PageableDefault(page = 0, size = 10) Pageable pageable){
-//        System.out.println("pageable = " + pageable);
+    public ResponseEntity getPosts(@PageableDefault(page = 0, size = 5, sort = ("id"), direction = Sort.Direction.DESC) Pageable pageable){
+        Long id = 1L;
         Page<Post> allPosts = postService.getAllPosts(pageable);
-        Integer pageLimit = allPosts.getNumberOfElements() / allPosts.getSize();
+
+        List<ResponsePostDto> postList = new ArrayList<>();
+        for (Post post : allPosts) {
+            ResponsePostDto postDto = ResponsePostDto.builder()
+                    .id(id++)
+                    .title(post.getTitle())
+                    .subTitle(post.getSubTitle())
+                    .content(post.getContent())
+                    .createdTime(post.getCreatedTime())
+                    .lastModifiedTime(post.getLastModifiedTime())
+                    .build();
+            postList.add(postDto);
+        }
+
         ResponsePostListDto postListDto = ResponsePostListDto
                 .builder()
-                .postList(allPosts.getContent())
+                .postList(postList)
                 .numOfElements(allPosts.getNumberOfElements())
                 .totalElements(allPosts.getTotalElements())
                 .pagingSize(allPosts.getSize())
@@ -49,19 +65,8 @@ public class PostController {
                 .pageLimit(allPosts.getNumberOfElements()/allPosts.getSize())
                 .build();
 
-
         return ResponseEntity.ok(postListDto);
     }
-//
-//    @PostMapping("/file/update")
-//    public ResponseEntity createPost(@RequestParam("file") MultipartFile multipartFile){
-//
-//        if(multipartFile.isEmpty()){
-//            log.info("File is Empty");
-//        }
-//
-//        return "";
-//    }
 
     @PostMapping("/new")
     public ResponseEntity createPost(@RequestBody RequestPostDto requestPostDto){

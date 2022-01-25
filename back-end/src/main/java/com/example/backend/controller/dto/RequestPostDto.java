@@ -13,4 +13,5 @@ public class RequestPostDto {
     private String subTitle;
     private String content;
     private String category;
+    private String author;
 }

@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class ResponsePostListDto {
-    private List<Post> postList;
+    private List<ResponsePostDto> postList;
     private Integer numOfElements;
     private Long totalElements;
     private Integer pagingSize;
