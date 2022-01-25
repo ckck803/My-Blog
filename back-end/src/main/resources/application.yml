@@ -28,8 +28,11 @@ jwt:
   secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
   token-validity-in-seconds: 86400000
 
-logging:
-  level:
-    org:
-      springframework:
-        security: TRACE
+file:
+  path: /Users/dongwoo-yang/spring-file/
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: TRACE
