@@ -11,7 +11,7 @@ const PostList = ({ pageIndex, page }) => {
   return (
     <div>
       <h1 className="my-4">Page Heading</h1>
-      <div className="card mb-4">
+      <div className="mb-4">
         {postList.posts &&
           postList.posts.map((post) => {
             return <PostListItem key={post.id} post={post} />;
