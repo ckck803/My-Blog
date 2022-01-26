@@ -9,6 +9,8 @@ const Header = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
 
+  const token = localStorage.getItem("token");
+
   const onToggle = () => {
     setIsOpen(!isOpen);
   };
@@ -31,11 +33,11 @@ const Header = () => {
         <Collapse
           isOpen={isOpen}
           className="lg-auto d-felx justify-content-end"
-          navbar
+          navbar={true}
         >
           <div>
-            <ul className="navbar-nav lg-auto" navbar>
-              <Nav className="nav-item active ml-auto d-felx" navbar>
+            <ul className="navbar-nav lg-auto">
+              <Nav className="nav-item active ml-auto d-felx">
                 <Link to={"/"} className="nav-link">
                   Home
                 </Link>
@@ -56,7 +58,7 @@ const Header = () => {
                 </Link>
               </Nav>
               <Nav>
-                {!false && (
+                {!token && (
                   <Fragment>
                     <SignupModal
                       isSingupOpen={isSignupOpen}

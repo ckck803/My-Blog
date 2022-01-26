@@ -10,9 +10,9 @@ const MainTemplate = ({ children }) => {
   return (
     <div>
       <Header />
-      <div className="container">
+      <div className="container" id="main-body">
         <Row>
-          <div class="col-lg-8">{children}</div>
+          <div className="col-lg-8">{children}</div>
           <div className="col-md-4">
             <Search />
             <Category />

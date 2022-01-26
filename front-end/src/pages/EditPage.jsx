@@ -12,17 +12,20 @@ import "prismjs/themes/prism.css";
 import Header from "../components/fragments/Header";
 import Footer from "../components/fragments/Footer";
 import { useCallback } from "react";
+import ToastUIEditor from "../components/contents/ToastUIEditor";
+import { useMediaQuery } from "react-responsive";
 
 dotenv.config();
 
 const TitleContainer = styled.div`
-  position: "absolute";
-  clear: "both";
+  /* height: "15vh"; */
 
   padding-top: 1rem;
   padding-bottom: 1rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
+  padding-right: 1.75vw;
+  padding-left: 1.75vw;
+  /* padding-right: 2rem;
+  padding-left: 2rem; */
   height: 2.75rem; ;
 `;
 
@@ -45,7 +48,7 @@ const InputTitle = styled.input`
   padding-left: 10px;
 
   border: 1px solid rgb(0, 0, 0, 0);
-  width: 400px;
+  width: 900px;
 
   font-size: 2.75rem;
   &:active,
@@ -57,6 +60,7 @@ const InputTitle = styled.input`
 const InputCategory = styled.input`
   padding-right: 5px;
   padding-left: 10px;
+  padding-top: 5px;
 
   border: 1px solid rgb(0, 0, 0, 0);
   width: 400px;
@@ -83,11 +87,6 @@ const EditPage = () => {
   const { login } = useSelector((state) => state.login);
 
   const onClickSubmit = () => {
-    // console.log(editorRef.current.getInstance().getMarkdown());
-    // // console.log(editorRef.current.getInstance().getHTML());
-    // // console.log(process.env.REACT_APP_POST_WRITE_API_URL);
-    // const content = editorRef.current.getInstance().getMarkdown();
-    // console.log("content : ", content);
     setForm({
       ...form,
       content: editorRef.current.getInstance().getMarkdown(),
@@ -108,7 +107,6 @@ const EditPage = () => {
   const onChange = useCallback(
     (e) => {
       const { name, value } = e.target;
-      // console.log(value);
       setForm({
         ...form,
         [name]: value,
@@ -117,47 +115,10 @@ const EditPage = () => {
     [setForm, form]
   );
 
-  useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current.getInstance().removeHook("addImageBlobHook");
-      editorRef.current
-        .getInstance()
-        .addHook("addImageBlobHook", (blob, callback) => {
-          (async () => {
-            let formData = new FormData();
-            formData.append("file", blob);
+  // const isDesktopOrLaptop = useMediaQuery({ query: "(min-width : 1024px)" });
+  const isDesktopOrLaptop = useMediaQuery({ query: "(min-height : 900px)" });
 
-            console.log("이미지가 업로드 됐습니다.");
-            const fileStoreURL = process.env.REACT_APP_FILE_API_URL;
-
-            const { data: filename } = await axios.post(
-              fileStoreURL + "/upload",
-              formData,
-              {
-                header: { "content-type": "multipart/formdata" },
-              }
-            );
-
-            const imageUrl = fileStoreURL + "/" + filename;
-
-            // Image 를 가져올 수 있는 URL 을 callback 메서드에 넣어주면 자동으로 이미지를 가져온다.
-            callback(imageUrl, "image");
-          })();
-
-          return false;
-        });
-    }
-
-    return () => {};
-  }, [editorRef]);
-
-  var height = 0;
-
-  // useEffect(() => {
-  //   console.log(editorRef.current.props.height);
-  //   editorRef.current.props.height = (window.innerHeight / 100) * 80;
-  //   // height = (window.innerHeight / 100) * 80;
-  // }, [height]);
+  const editHeight = "80vh";
 
   return (
     <div>
@@ -184,23 +145,16 @@ const EditPage = () => {
         </TitleContainer>
         <div
           style={{
-            position: "absolute",
+            position: "fixed",
             bottom: "0",
             width: "100%",
-            height: "75%",
-            clear: "both",
           }}
         >
-          <Editor
-            initialValue="hello react editor world!"
-            previewStyle="vertical"
-            height="800px"
-            initialEditType="markdown"
-            useCommandShortcut={true}
-            ref={editorRef}
-            plugins={[codeSyntaxHighlight]}
-          />
-          <button onClick={onClickSubmit}>Markdown 반환하기</button>
+          {/* <div style={{ height: "80%" }}> */}
+          {/* <div> */}
+          {/* {isDesktopOrLaptop && ( */}
+          <ToastUIEditor editHeight={editHeight} editorRef={editorRef} />
+          {/* )} */}
         </div>
       </div>
     </div>
