@@ -75,7 +75,7 @@ class UserInfoServiceTest {
                 .build();
 
         given(userInfoRepository.save(any(UserInfo.class))).willReturn(userInfo);
-        UserInfo savedUserInfo = userInfoService.save(registerUser);
+        UserInfo savedUserInfo = userInfoService.saveUser(registerUser);
 
         assertThat(savedUserInfo.getUsername()).isEqualTo(userInfo.getUsername());
         assertThat(savedUserInfo.getEmail()).isEqualTo(userInfo.getEmail());

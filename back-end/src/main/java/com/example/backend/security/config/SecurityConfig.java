@@ -52,6 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/signup").permitAll()
+                .antMatchers("/logout").permitAll()
                 .anyRequest().authenticated();
+
+        http
+                .logout()
+                .logoutUrl("/api/logout");
     }
 }

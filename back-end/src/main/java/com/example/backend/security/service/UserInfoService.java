@@ -42,7 +42,7 @@ public class UserInfoService implements UserDetailsService {
     }
 
     @Transactional
-    public UserInfo save(RequestRegisterUser registerUser) {
+    public UserInfo saveUser(RequestRegisterUser registerUser) {
         try {
             UserInfo userInfo = UserInfo.builder()
                     .username(registerUser.getUsername())

@@ -30,6 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${security.url.signup}")
     private String signupUrl;
 
+    @Value("${security.url.logout}")
+    private String logoutUrl;
+
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -41,7 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String tokenHeader = request.getHeader("Authorization");
 
             if(tokenHeader != null && tokenHeader.startsWith("Bearer")){
-                log.info("tokenHeader : {}", tokenHeader);
                 token = tokenHeader.substring(7);
             }
 
@@ -58,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         List<RequestMatcher> requestMatcher = new ArrayList<>();
         requestMatcher.add(new AntPathRequestMatcher(loginUrl));
         requestMatcher.add(new AntPathRequestMatcher(signupUrl));
+        requestMatcher.add(new AntPathRequestMatcher(logoutUrl));
 
         for (RequestMatcher matcher : requestMatcher) {
             if(matcher.matches(request)){

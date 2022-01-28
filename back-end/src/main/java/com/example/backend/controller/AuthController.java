@@ -5,10 +5,7 @@ import com.example.backend.domain.UserInfo;
 import com.example.backend.security.service.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
@@ -21,18 +18,22 @@ public class AuthController {
     private final UserInfoService userInfoService;
 
     @PostMapping("/signup")
-    public ResponseEntity registerUser(@RequestBody RequestRegisterUser registerUser){
-        UserInfo userinfo = userInfoService.save(registerUser);
+    public ResponseEntity registerUser(@RequestBody RequestRegisterUser registerUser) {
+        UserInfo userinfo = userInfoService.saveUser(registerUser);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostConstruct
-    public void init(){
-        RequestRegisterUser registerUser = new RequestRegisterUser();
-        registerUser.setUsername("test");
-        registerUser.setEmail("test@test.com");
-        registerUser.setPassword("1234");
-        userInfoService.save(registerUser);
+    @GetMapping("/logout")
+    public void logout() {
     }
+
+//    @PostConstruct
+//    public void init(){
+//        RequestRegisterUser registerUser = new RequestRegisterUser();
+//        registerUser.setUsername("test");
+//        registerUser.setEmail("test@test.com");
+//        registerUser.setPassword("1234");
+//        userInfoService.saveUser(registerUser);
+//    }
 }
