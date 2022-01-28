@@ -18,8 +18,8 @@ public class ResponsePostDto {
     private String subTitle;
     private List<String> storedFileName;
     private String content;
-//    private String author;
-//    private String category;
+    private String author;
+    private String category;
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime createdTime;
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
