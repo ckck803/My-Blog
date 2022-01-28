@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import LoginReducer from "./LoginReducer";
+import AuthReducer from "./AuthReducer";
 import PostListReducer from "./PostListReducer";
 import SignupReducer from "./SignupReducer";
 import { persistReducer } from "redux-persist";
@@ -13,7 +13,7 @@ import storageSession from "redux-persist/lib/storage/session";
 // };
 
 const createRootReducer = combineReducers({
-  login: LoginReducer,
+  auth: AuthReducer,
   postList: PostListReducer,
   // postList: persistReducer(persistPostListConfig, PostListReducer),
   // SignupReducer: SignupReducer,
