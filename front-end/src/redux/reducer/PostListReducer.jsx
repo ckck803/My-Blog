@@ -1,5 +1,5 @@
 import {
-  POST_LAODING_FAILURE,
+  POST_LOADING_FAILURE,
   POST_LOADING_REQUEST,
   POST_LOADING_SUCCESS,
 } from "../type";
@@ -38,7 +38,7 @@ const PostListReducer = (state = initialState, action) => {
         pageIndex: action.payload.pageIndex,
         pageLimit: action.payload.pageLimit,
       };
-    case POST_LAODING_FAILURE:
+    case POST_LOADING_FAILURE:
       return {
         ...state,
         laoding: false,

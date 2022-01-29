@@ -14,6 +14,7 @@ import Footer from "../components/fragments/Footer";
 import { useCallback } from "react";
 import ToastUIEditor from "../components/contents/ToastUIEditor";
 import { useMediaQuery } from "react-responsive";
+import { useParams } from "react-router-dom";
 
 dotenv.config();
 
@@ -73,7 +74,8 @@ const InputCategory = styled.input`
 `;
 
 const EditPage = () => {
-  const editorRef = useRef();
+  const { id } = useParams();
+  const post = useSelector((state) => state.postList.posts[id - 1]);
 
   const [form, setForm] = useState({
     title: null,
@@ -83,14 +85,20 @@ const EditPage = () => {
     author: null,
   });
 
-  const { title, subTitle, category, content, author } = form;
-  const { login } = useSelector((state) => state.login);
+  const { title, category } = form;
+  const { auth } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (id) {
+      setForm({
+        ...form,
+        title: post.title,
+        category: post.category,
+      });
+    }
+  });
 
   const onClickSubmit = () => {
-    setForm({
-      ...form,
-      content: editorRef.current.getInstance().getMarkdown(),
-    });
     console.log(form);
     const config = {
       headers: {
@@ -114,11 +122,6 @@ const EditPage = () => {
     },
     [setForm, form]
   );
-
-  // const isDesktopOrLaptop = useMediaQuery({ query: "(min-width : 1024px)" });
-  const isDesktopOrLaptop = useMediaQuery({ query: "(min-height : 900px)" });
-
-  const editHeight = "80vh";
 
   return (
     <div>
@@ -150,11 +153,12 @@ const EditPage = () => {
             width: "100%",
           }}
         >
-          {/* <div style={{ height: "80%" }}> */}
-          {/* <div> */}
-          {/* {isDesktopOrLaptop && ( */}
-          <ToastUIEditor editHeight={editHeight} editorRef={editorRef} />
-          {/* )} */}
+          <ToastUIEditor
+            id={id}
+            form={form}
+            setForm={setForm}
+            onClickSubmit={onClickSubmit}
+          />
         </div>
       </div>
     </div>

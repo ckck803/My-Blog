@@ -22,8 +22,8 @@ const Pagenation = () => {
   // );
 
   return (
-    <ul class="pagination justify-content-center mb-4">
-      <li class="page-item">
+    <ul className="pagination justify-content-center mb-4">
+      <li className="page-item">
         {/* <li class={pageIndex > 0 ? "page-item" : "page-item disabled"}> */}
         {/* <button className="page-link" onClick={onClickPrev}>
           &larr; Older
@@ -33,7 +33,7 @@ const Pagenation = () => {
         </Link>
       </li>
       {/* <li class={pageLimit > pageIndex ? "page-item " : "page-item disabled"}> */}
-      <li class="page-item">
+      <li className="page-item">
         {/* <button className="page-link" onClick={onClickNext}>
           Newer &rarr;
         </button> */}

@@ -1,6 +1,20 @@
 import axios from "axios";
-import { LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS } from "../type";
-import { all, call, fork, put, takeEvery } from "redux-saga/effects";
+import {
+  LOGIN_FAILURE,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGOUT_FAILURE,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+} from "../type";
+import {
+  all,
+  call,
+  fork,
+  put,
+  takeEvery,
+  takeLatest,
+} from "redux-saga/effects";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -20,7 +34,7 @@ const loginUserAPI = (loginData) => {
         config
       )
       .then((response) => {
-        // console.log("로그인 요청에 성공했습니다.");
+        console.log("로그인 요청에 성공했습니다.");
         localStorage.setItem("token", response.headers.authorization);
         return response;
       })
@@ -49,6 +63,23 @@ function* watchLoginUser() {
   yield takeEvery(LOGIN_REQUEST, loginUser);
 }
 
-export default function* loginSaga() {
-  yield all([fork(watchLoginUser)]);
+function* logoutUser(action) {
+  try {
+    console.log("Request Logout");
+    yield put({
+      type: LOGOUT_SUCCESS,
+    });
+  } catch (e) {
+    yield put({
+      type: LOGOUT_FAILURE,
+    });
+  }
+}
+
+function* watchLogoutUser() {
+  yield takeLatest(LOGOUT_REQUEST, logoutUser);
+}
+
+export default function* AuthSaga() {
+  yield all([fork(watchLoginUser), fork(watchLogoutUser)]);
 }

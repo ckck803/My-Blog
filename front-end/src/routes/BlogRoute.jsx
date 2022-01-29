@@ -13,7 +13,7 @@ const BlogRoute = () => {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/post/:id" element={<PostPage />} />
-          <Route path="/edit" element={<EditPage />} />
+          <Route path="/edit/:id" element={<EditPage />} />
           {/* <Route path="/login" /> */}
 
           <Route path="*" element={<NotFound />} />

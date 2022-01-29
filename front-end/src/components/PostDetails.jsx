@@ -10,6 +10,7 @@ import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // import darcula from "react-syntax-highlighter/dist/esm/styles/prism/darcula";
 import darcula from "react-syntax-highlighter/dist/esm/styles/hljs/darcula";
+import { Link } from "react-router-dom";
 // import docco from "react-syntax-highlighter/dist/cjs/styles/prism/
 
 const PostDetails = ({ id }) => {
@@ -20,17 +21,17 @@ const PostDetails = ({ id }) => {
     const yymmdd = createdTime.toLocaleDateString();
     const timeStamp = createdTime.toLocaleTimeString();
 
-    return <p>{"Created : " + yymmdd + " " + timeStamp}</p>;
+    return (
+      <p style={{ fontSize: "12px" }}>
+        {" "}
+        {"Created : " + yymmdd + " " + timeStamp}
+      </p>
+    );
   };
 
-  const markdown = `Here is some JavaScript code:
+  const onClickDelete = () => {};
 
-  ~~~js
-  console.log('It works!')
-  ~~~
-  `;
-
-  // SyntaxHighlighter.registerLanguage("javascript", js);
+  const onClickUpdate = () => {};
 
   return (
     <div>
@@ -38,32 +39,18 @@ const PostDetails = ({ id }) => {
         <div>
           <h1 className="mt-4">{post.title}</h1>
           <p className="lead">{post.subtitle}</p>
+          <div className="float-right">
+            <Link to={"/edit/" + post.id} className="btn btn-sm">
+              수정
+            </Link>
+            <div to={"/delete/" + post.id} className="btn btn-sm ">
+              삭제
+            </div>
+          </div>
+          <h6 style={{ fontSize: "15px" }}>Category : {post.category}</h6>
           <hr />
           <TimeLine post={post.createdTime} />
           <hr />
-          {/* <img
-            className="img-fluid rounded"
-            src="http://localhost:8080/file/ccdf3127-db21-4364-86e9-0efeebe5e7e3.png"
-            alt=""
-          />
-          <hr />
-          <p>{post.content}</p> */}
-          {/* <ReactMarkdown
-            parserOptions={{ commonmark: true }}
-            escapeHtml={false}
-            rehypePlugins={[rehypeRaw]}
-            remarkPlugins={[remarkGfm]}
-            children={post.content}
-            // children={children}
-          >
-            <SyntaxHighlighter
-              children={children}
-              // style={dark}
-              // language={match[1]}
-              PreTag="div"
-            />
-          </ReactMarkdown> */}
-
           <ReactMarkdown
             parserOptions={{ commonmark: true }}
             escapeHtml={false}

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { NavLink } from "reactstrap";
+import { Nav, NavLink } from "reactstrap";
 import { useDispatch } from "react-redux";
 import {
   LoginBody,
@@ -8,7 +8,8 @@ import {
   ModalBackGround,
   ModalBox,
 } from "../../assets/css/login";
-import { loginRequest } from "../../redux/reducer/LoginReducer";
+// import { loginRequest } from "../../redux/reducer/AuthReducer";
+import { loginRequest } from "../../redux/reducer/AuthReducer";
 
 // 아직도 인턴 때 봤던 gobun 변수명을 잊지 못한다...... 문화충격 그 자체..... 더 놀라운건 지금 그 팀에서 일하고 있다는 것.......
 const LoginModal = ({ isLoginOpen, onClickLogin }) => {
@@ -31,11 +32,12 @@ const LoginModal = ({ isLoginOpen, onClickLogin }) => {
   const onLoginEvnet = (e) => {
     console.log(form);
     dispatch(loginRequest(form));
+    onClickLogin();
   };
 
   return (
-    <div>
-      <NavLink className="nav-link" onClick={onClickLogin} href="#">
+    <Nav className="nav-item ml-auto d-felx">
+      <NavLink className="nav-link btn" onClick={onClickLogin}>
         Log In
       </NavLink>
       {isLoginOpen && (
@@ -74,7 +76,7 @@ const LoginModal = ({ isLoginOpen, onClickLogin }) => {
           </ModalBox>
         </ModalBackGround>
       )}
-    </div>
+    </Nav>
   );
 };
 

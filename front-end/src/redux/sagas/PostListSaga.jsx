@@ -10,7 +10,7 @@ import {
   takeLatest,
 } from "redux-saga/effects";
 import {
-  POST_LAODING_FAILURE,
+  POST_LOADING_FAILURE,
   POST_LOADING_REQUEST,
   POST_LOADING_SUCCESS,
   POST_NEXT_REQUEST,
@@ -27,7 +27,7 @@ const getPostListAPI = (paging) => {
       size: paging.size,
     },
   };
-  const Posts = axios
+  const postList = axios
     .get(process.env.REACT_APP_POST_LIST_API_URL, config)
     .then((Response) => {
       return Response.data;
@@ -36,7 +36,7 @@ const getPostListAPI = (paging) => {
       console.log(err);
     });
 
-  return Posts;
+  return postList;
 };
 
 function* PostRequest(action) {
@@ -45,14 +45,14 @@ function* PostRequest(action) {
       page: action.value,
       size: process.env.REACT_APP_PAGE_SIZE,
     };
-    const Posts = yield call(getPostListAPI, paging);
+    const postList = yield call(getPostListAPI, paging);
     yield put({
       type: POST_LOADING_SUCCESS,
-      payload: Posts,
+      payload: postList,
     });
   } catch (e) {
     yield put({
-      type: POST_LAODING_FAILURE,
+      type: POST_LOADING_FAILURE,
     });
   }
 }

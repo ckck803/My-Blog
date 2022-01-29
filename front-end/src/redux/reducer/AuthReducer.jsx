@@ -1,10 +1,17 @@
-import { LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS } from "../type";
+import {
+  LOGIN_FAILURE,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGOUT_FAILURE,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+} from "../type";
 import Jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
 const initialState = {
-  token: "",
+  token: localStorage.getItem("token"),
   isAuthenticated: false,
   username: "",
   email: "",
@@ -18,7 +25,11 @@ export const loginRequest = (form) => ({
   payload: form,
 });
 
-const LoginReducer = (state = initialState, action) => {
+export const logoutRequest = () => ({
+  type: LOGOUT_REQUEST,
+});
+
+const AuthReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
       return {
@@ -46,9 +57,37 @@ const LoginReducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: false,
       };
+    case LOGOUT_REQUEST:
+      return {
+        ...state,
+      };
+    case LOGOUT_SUCCESS:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        token: "",
+        isAuthenticated: false,
+        username: "",
+        email: "",
+        userRole: "",
+        errorMsg: "",
+        successMsg: "",
+      };
+    case LOGOUT_FAILURE:
+      return {
+        ...state,
+        token: "",
+        isAuthenticated: false,
+        username: "",
+        email: "",
+        userRole: "",
+        // errorMsg: action.payload.auth.msg,
+        successMsg: "",
+      };
+
     default:
       return state;
   }
 };
 
-export default LoginReducer;
+export default AuthReducer;

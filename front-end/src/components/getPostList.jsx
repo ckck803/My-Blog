@@ -16,7 +16,6 @@ const getPostList = ({ page }) => {
   }
 
   const postList = JSON.parse(posts);
-  // console.log(postList);
 
   if (postList) {
     return;

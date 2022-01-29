@@ -1,22 +1,20 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Editor } from "@toast-ui/react-editor";
 import axios from "axios";
-import styled from "styled-components";
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js";
+import { Link } from "react-router-dom";
 import dotenv from "dotenv";
-import rehypeRaw from "rehype-raw";
-import { useSelector } from "react-redux";
 
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "prismjs/themes/prism.css";
-import Header from "../fragments/Header";
-import Footer from "../fragments/Footer";
 import { useCallback } from "react";
+import { useSelector } from "react-redux";
 
 dotenv.config();
 
-const ToastUIEditor = ({ editHeight, editorRef }) => {
-  // const editorRef = useRef();
+const ToastUIEditor = ({ form, setForm, onClickSubmit, id }) => {
+  const post = useSelector((state) => state.postList.posts[id - 1]);
+  const editorRef = useRef();
 
   useEffect(() => {
     if (editorRef.current) {
@@ -47,31 +45,54 @@ const ToastUIEditor = ({ editHeight, editorRef }) => {
 
           return false;
         });
+      editorRef.current.getInstance().setMarkdown(post.content, true);
     }
-
     return () => {};
-  }, [editorRef]);
-  console.log(editHeight);
+  }, [editorRef, post]);
+
+  const onChange = useCallback(
+    (props) => {
+      if (!editorRef.current) {
+        return;
+      }
+      let content = "";
+      if (props === "markdown") {
+        content = editorRef.current.getInstance().getMarkdown();
+      } else {
+        content = editorRef.current.getInstance().getHtml();
+      }
+      setForm({
+        ...form,
+        content: content,
+      });
+    },
+    [form, setForm, editorRef]
+  );
 
   return (
-    // <div
-    //   style={{
-    //     position: style.position,
-    //     bottom: style.bottom,
-    //     width: style.width,
-    //   }}
-    // >
     <div style={{ paddingLeft: "1.75vw", paddingRight: "1.75vw" }}>
       <Editor
         initialValue="hello react editor world!"
         previewStyle="vertical"
-        height={editHeight}
+        height="75vh"
         initialEditType="markdown"
         useCommandShortcut={true}
         ref={editorRef}
         plugins={[codeSyntaxHighlight]}
+        onChange={onChange}
       />
-      {/* <button onClick={onClickSubmit}>Markdown 반환하기</button> */}
+      <div className="float-right">
+        <Link to={"/"} className="btn">
+          취소
+        </Link>
+        <Link
+          to={"/"}
+          className="btn lg-auto d-felx justify-content-end"
+          onClick={onClickSubmit}
+        >
+          저장
+        </Link>
+      </div>
     </div>
   );
 };

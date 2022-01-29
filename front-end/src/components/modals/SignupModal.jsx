@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useState } from "react";
 // import { useDispatch } from "react-redux";
 import { ModalBox } from "../../assets/css/login";
-import { NavLink } from "reactstrap";
+import { Nav, NavLink } from "reactstrap";
 import {
   ModalBackGround,
   SignUpBody,
@@ -36,11 +36,12 @@ const SignupModal = ({ isSingupOpen, onClickSignup }) => {
   const onClickSignUp = useCallback(() => {
     console.log("onClickSignUp");
     // dispatch(signupRequest(form));
+    onClickSignUp();
   }, [form]);
 
   return (
-    <Fragment>
-      <NavLink className="nav-link" onClick={onClickSignup} href="#">
+    <Nav className="nav-item ml-auto d-felx">
+      <NavLink className="nav-link btn" onClick={onClickSignup}>
         Sign Up
       </NavLink>
       {isSingupOpen && (
@@ -88,7 +89,7 @@ const SignupModal = ({ isSingupOpen, onClickSignup }) => {
           </ModalBox>
         </ModalBackGround>
       )}
-    </Fragment>
+    </Nav>
   );
 };
 
