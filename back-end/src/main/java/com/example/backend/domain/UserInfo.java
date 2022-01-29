@@ -30,11 +30,15 @@ public class UserInfo extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role userRole;
 
+    @Column(name = "ISAUTHENTICATED", nullable = false)
+    private boolean isAuthenticated;
+
     @Builder
     public UserInfo(String username, String email, String password, Role userRole) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.userRole = userRole;
+        this.isAuthenticated = false;
     }
 }

@@ -3,6 +3,7 @@ package com.example.backend.security.service;
 import com.example.backend.controller.dto.RequestRegisterUser;
 import com.example.backend.domain.UserInfo;
 import com.example.backend.domain.enums.Role;
+import com.example.backend.exception.NotAuthenticatedUser;
 import com.example.backend.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,8 +37,10 @@ public class UserInfoService implements UserDetailsService {
         }
 
         UserInfo userInfo = optional.get();
+        if(userInfo.isAuthenticated() == false){
+            throw new NotAuthenticatedUser("승인이 필요한 사용자 입니다.");
+        }
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userInfo.getUserRole().getRole());
-
         return new User(userInfo.getEmail(), userInfo.getPassword(), authorities);
     }
 
