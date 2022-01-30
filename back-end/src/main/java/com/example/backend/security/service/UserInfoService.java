@@ -21,12 +21,17 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-//@Component
+@Service
 public class UserInfoService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
     private final UserInfoRepository userInfoRepository;
+
+//    public UserInfoService(PasswordEncoder passwordEncoder, UserInfoRepository userInfoRepository){
+//        this.passwordEncoder = passwordEncoder;
+//        this.userInfoRepository = userInfoRepository;
+//    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -37,7 +42,7 @@ public class UserInfoService implements UserDetailsService {
         }
 
         UserInfo userInfo = optional.get();
-        if(userInfo.isAuthenticated() == false){
+        if(userInfo.isState() == false){
             throw new NotAuthenticatedUser("승인이 필요한 사용자 입니다.");
         }
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userInfo.getUserRole().getRole());
@@ -58,5 +63,17 @@ public class UserInfoService implements UserDetailsService {
         }catch (Exception e){
             throw new IllegalStateException("저장에 실패 했습니다.");
         }
+    }
+
+    @Transactional
+    public UserInfo changeUserState(String email){
+        Optional<UserInfo> optional = userInfoRepository.findUserInfoByEmail(email);
+
+        if(optional.isEmpty()){
+            throw new UsernameNotFoundException("해당 사용자가 존재하지 않습니다.");
+        }
+
+        UserInfo userInfo = optional.get();
+        return userInfo.changeState(true);
     }
 }

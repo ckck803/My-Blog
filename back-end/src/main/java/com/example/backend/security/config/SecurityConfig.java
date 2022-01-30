@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
 
         http
+                .csrf().disable()
                 .logout()
                 .logoutUrl("/api/logout");
     }

@@ -29,8 +29,8 @@ public class JwtUtils {
 
     private String role = "role";
 
-    public JwtUtils(@Value("${jwt.secret}") String secret,
-                    @Value("${jwt.token-validity-in-seconds}") Long tokenValidityInMilliseconds) {
+    public JwtUtils(@Value("${security.jwt.secret}") String secret,
+                    @Value("${security.jwt.token-validity-in-seconds}") Long tokenValidityInMilliseconds) {
         String encodedSecrete = Encoders.BASE64.encode(secret.getBytes(StandardCharsets.UTF_8));
 
         this.secreteKey = Keys.hmacShaKeyFor(encodedSecrete.getBytes(StandardCharsets.UTF_8));

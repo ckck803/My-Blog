@@ -39,17 +39,17 @@ public class Post extends BaseEntity{
     private Category category;
 
     // ==== 연관관계 편의 메서드 ==== //
-    public void changPost(Category category){
+    public void changePost(Category category){
         this.category = category;
-        this.category
-                .getPosts();
+        // 새로운 카테고리에 해당 포스트 추가
+        this.category.getPosts().add(this);
     }
 
     public Post updatePost(Post post) {
         this.title = post.title;
         this.subTitle = post.subTitle;
         this.content = post.content;
-        changPost(post.getCategory());
+        changePost(post.getCategory());
         return this;
     }
 }

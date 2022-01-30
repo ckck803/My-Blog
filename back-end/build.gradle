@@ -31,6 +31,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    implementation 'mysql:mysql-connector-java'
+
     // Session jdbc
     implementation 'org.springframework.session:spring-session-jdbc'
 

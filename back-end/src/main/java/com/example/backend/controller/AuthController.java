@@ -34,6 +34,8 @@ public class AuthController {
 //        registerUser.setUsername("test");
 //        registerUser.setEmail("test@test.com");
 //        registerUser.setPassword("1234");
-//        userInfoService.saveUser(registerUser);
+//        UserInfo userInfo = userInfoService.saveUser(registerUser);
+//
+//        userInfoService.changeUserState(userInfo.getEmail());
 //    }
 }

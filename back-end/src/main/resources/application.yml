@@ -1,15 +1,4 @@
 spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    hikari:
-      username: sa
-      password:
-    url: jdbc:h2:mem:blog
-
-  h2:
-    console:
-      path: /h2-console
-      enabled: true
   jpa:
     hibernate:
       ddl-auto: create
@@ -17,22 +6,24 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+  config:
+    import: classpath:/application-local.yml
+
+file:
+  path: /Users/dongwoo-yang/spring-file/
 
 security:
   url:
     login: /api/login
     signup: /api/signup
+    logout: /api/logout
+  jwt:
+    header: Token
+    secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
+    token-validity-in-seconds: 86400000
 
-jwt:
-  header: Token
-  secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
-  token-validity-in-seconds: 86400000
-
-file:
-  path: /Users/dongwoo-yang/spring-file/
-
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        security: TRACE
+logging:
+  level:
+    org:
+      springframework:
+        security: debug

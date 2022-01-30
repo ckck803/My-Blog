@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+**/application-prod.yml
+**/application-mysql.yml
+**/application-security.yml
+
 # dependencies
 /node_modules
 /.pnp

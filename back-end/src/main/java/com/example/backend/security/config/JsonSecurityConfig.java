@@ -41,14 +41,17 @@ public class JsonSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserInfoRepository userInfoRepository;
 
+//    private final UserInfoService userInfoService;
+
     private final JwtUtils jwtUtils;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .authenticationProvider(jsonAuthenticationProvider())
-                .userDetailsService(userInfoService())
-                .passwordEncoder(passwordEncoder());
+                .authenticationProvider(jsonAuthenticationProvider());
+//                .userDetailsService(userInfoService())
+//                .userDetailsService(userInfoService)
+//                .passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -82,22 +85,23 @@ public class JsonSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserInfoService userInfoService(){
-        return new UserInfoService(passwordEncoder(), userInfoRepository);
-    }
+//    @Bean
+//    public UserInfoService userInfoService(){
+//        return new UserInfoService(passwordEncoder(), userInfoRepository);
+//    }
+
 
     @Bean
-    public JsonAuthenticationProvider jsonAuthenticationProvider(){
+    public JsonAuthenticationProvider jsonAuthenticationProvider() {
         return new JsonAuthenticationProvider(passwordEncoder(), userDetailsService());
     }
 
     @Bean
-    public JsonAuthenticationSuccessHandler jsonAuthenticationSuccessHandler(){
+    public JsonAuthenticationSuccessHandler jsonAuthenticationSuccessHandler() {
         return new JsonAuthenticationSuccessHandler(objectMapper, jwtUtils);
     }
 

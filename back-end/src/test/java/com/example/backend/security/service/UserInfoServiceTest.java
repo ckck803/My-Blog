@@ -7,6 +7,7 @@ import com.example.backend.repository.UserInfoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -22,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+@AutoConfigureMockMvc
 @SpringBootTest
 class UserInfoServiceTest {
 
@@ -45,6 +47,7 @@ class UserInfoServiceTest {
                 .password(passwordEncoder.encode(password))
                 .userRole(Role.READ)
                 .build();
+        savedUser.changeState(true);
 
         given(userInfoRepository.findUserInfoByEmail(email)).willReturn(Optional.of(savedUser));
         UserDetails loadUserByUsername = userInfoService.loadUserByUsername(email);

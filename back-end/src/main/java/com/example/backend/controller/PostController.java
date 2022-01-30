@@ -42,6 +42,11 @@ public class PostController {
         Long id = 1L;
         Page<Post> allPosts = postService.getAllPosts(pageable);
 
+        if(allPosts == null){
+            log.info("저장된 포스트가 하나도 없습니다.");
+            return ResponseEntity.ok().build();
+        }
+
         List<ResponsePostDto> postList = new ArrayList<>();
         for (Post post : allPosts) {
             ResponsePostDto postDto = ResponsePostDto.builder()
@@ -79,7 +84,7 @@ public class PostController {
                 .content(requestPostDto.getContent())
                 .build();
 
-        post.changPost(category);
+        post.changePost(category);
         Post savedPost = postService.savePost(post);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
