@@ -19,10 +19,12 @@ public class JsonAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
+        String email = authentication.getName();
         String password = (String) authentication.getCredentials();
 
-        UserDetails loadUserByUsername = userDetailsService.loadUserByUsername(username);
+        System.out.println("username = " + email);
+        UserDetails loadUserByUsername = userDetailsService.loadUserByUsername(email);
+        System.out.println("loadUserByUsername = " + loadUserByUsername);
 
         if(!passwordEncoder.matches(password, loadUserByUsername.getPassword())){
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");

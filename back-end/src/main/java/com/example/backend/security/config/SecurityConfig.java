@@ -1,16 +1,13 @@
 package com.example.backend.security.config;
 
 
-import com.example.backend.repository.UserInfoRepository;
 import com.example.backend.security.fitler.JsonAuthenticationFilter;
 import com.example.backend.security.fitler.JwtAuthenticationFilter;
 import com.example.backend.security.handler.JsonAuthenticationSuccessHandler;
 import com.example.backend.security.provider.JsonAuthenticationProvider;
-import com.example.backend.security.service.UserInfoService;
-import com.example.backend.security.token.JsonAuthenticationToken;
+import com.example.backend.security.service.UserInfoUserDetailsService;
 import com.example.backend.security.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -24,7 +21,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -48,10 +44,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtUtils jwtUtils;
 
+    private final UserInfoUserDetailsService userInfoUserDetailsService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .authenticationProvider(jsonAuthenticationProvider());
+                .authenticationProvider(jsonAuthenticationProvider())
+                .userDetailsService(userInfoUserDetailsService);
     }
 
 
@@ -83,13 +82,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/api/logout");
 
         http
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class);
+                .addFilterBefore(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class)
+                ;
 
         http
                 .cors().configurationSource(corsConfigurationSource());
-    }
 
+//        customConfigurer(http);
+    }
+//
+//    private void customConfigurer(HttpSecurity http) throws Exception {
+//        http
+//                .apply(new JsonSecurityConfigurer<>(loginUrl, objectMapper))
+//                .successHandlerAjax(jsonAuthenticationSuccessHandler())
+////                .failureHandlerAjax(ajaxAuthenticationFailureHandler)
+////                .loginProcessingUrl(loginUrl)
+//                .setAuthenticationManager(jsonAuthenticationManager());
+////                .readAndWriteMapper(objectMapper);
+//
+//    }
+
+//    public AuthenticationManager jsonAuthenticationManager() {
+//        List<AuthenticationProvider> authProviderList = new ArrayList<>();
+//        authProviderList.add(jsonAuthenticationProvider());
+//        ProviderManager providerManager = new ProviderManager(authProviderList);
+//        return providerManager;
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -118,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JsonAuthenticationProvider jsonAuthenticationProvider() {
-        return new JsonAuthenticationProvider(passwordEncoder(), userDetailsService());
+        return new JsonAuthenticationProvider(passwordEncoder(), userInfoUserDetailsService);
     }
 
     @Bean

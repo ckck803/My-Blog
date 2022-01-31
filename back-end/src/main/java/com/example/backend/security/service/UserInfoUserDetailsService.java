@@ -22,9 +22,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserInfoService implements UserDetailsService {
-
-    private final PasswordEncoder passwordEncoder;
+public class UserInfoUserDetailsService implements UserDetailsService {
 
     private final UserInfoRepository userInfoRepository;
 
@@ -43,33 +41,5 @@ public class UserInfoService implements UserDetailsService {
         }
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userInfo.getUserRole().getRole());
         return new User(userInfo.getEmail(), userInfo.getPassword(), authorities);
-    }
-
-    @Transactional
-    public UserInfo saveUser(RequestRegisterUser registerUser) {
-        try {
-            UserInfo userInfo = UserInfo.builder()
-                    .username(registerUser.getUsername())
-                    .email(registerUser.getEmail())
-                    .password(passwordEncoder.encode(registerUser.getPassword()))
-                    .userRole(Role.READ)
-                    .build();
-
-            return userInfoRepository.save(userInfo);
-        }catch (Exception e){
-            throw new IllegalStateException("저장에 실패 했습니다.");
-        }
-    }
-
-    @Transactional
-    public UserInfo changeUserState(String email){
-        Optional<UserInfo> optional = userInfoRepository.findUserInfoByEmail(email);
-
-        if(optional.isEmpty()){
-            throw new UsernameNotFoundException("해당 사용자가 존재하지 않습니다.");
-        }
-
-        UserInfo userInfo = optional.get();
-        return userInfo.changeState(true);
     }
 }

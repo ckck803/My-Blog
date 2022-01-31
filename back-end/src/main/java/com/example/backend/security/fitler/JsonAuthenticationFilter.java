@@ -56,7 +56,8 @@ public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFi
         }
 
         JsonAuthenticationToken jsonAuthenticationToken = new JsonAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-        return this.getAuthenticationManager().authenticate(jsonAuthenticationToken);
+        Authentication authenticate = this.getAuthenticationManager().authenticate(jsonAuthenticationToken);
+        return authenticate;
     }
 
     private boolean isApplicationJSON(HttpServletRequest httpServletRequest){

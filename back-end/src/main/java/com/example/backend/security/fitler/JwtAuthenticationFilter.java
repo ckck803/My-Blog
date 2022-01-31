@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -33,6 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${security.url.logout}")
     private String logoutUrl;
 
+
+    public static final RequestMatcher DEFAULT_JWT_MATCHER = new DefaultRequiresJwtMatcher();
+    private RequestMatcher requireJwtAuthenticationMatcher = DEFAULT_JWT_MATCHER;
 
 
     @Override
@@ -69,6 +75,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         return false;
+    }
+
+
+    public void setRequireJwtProtectionMatcher(RequestMatcher requireJwtAuthenticationMatcher) {
+        Assert.notNull(requireJwtAuthenticationMatcher, "requireJwtProtectionMatcher cannot be null");
+        this.requireJwtAuthenticationMatcher = requireJwtAuthenticationMatcher;
+    }
+
+    private static final class DefaultRequiresJwtMatcher implements RequestMatcher {
+        private final HashSet<String> allowedMethods = new HashSet<>(Arrays.asList("GET", "HEAD", "TRACE", "OPTIONS"));
+
+        @Override
+        public boolean matches(HttpServletRequest request) {
+            return !this.allowedMethods.contains(request.getMethod());
+        }
+
+        @Override
+        public String toString() {
+            return "JwtNotRequired " + this.allowedMethods;
+        }
+
     }
 }
 

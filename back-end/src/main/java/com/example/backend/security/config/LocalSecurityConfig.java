@@ -1,9 +1,11 @@
 package com.example.backend.security.config;
 
+import com.example.backend.security.config.configurer.JsonSecurityConfigurer;
 import com.example.backend.security.fitler.JsonAuthenticationFilter;
 import com.example.backend.security.fitler.JwtAuthenticationFilter;
 import com.example.backend.security.handler.JsonAuthenticationSuccessHandler;
 import com.example.backend.security.provider.JsonAuthenticationProvider;
+import com.example.backend.security.service.UserInfoUserDetailsService;
 import com.example.backend.security.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -21,12 +25,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -37,15 +42,17 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${security.url.login}")
     private String loginUrl;
-
     private final ObjectMapper objectMapper;
-
     private final JwtUtils jwtUtils;
+    private final UserInfoUserDetailsService userInfoUserDetailsService;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .authenticationProvider(jsonAuthenticationProvider());
+                .authenticationProvider(jsonAuthenticationProvider())
+                .userDetailsService(userInfoUserDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
 
@@ -78,14 +85,30 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/api/logout");
 
-        http
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class);
+//        http
+//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class);
 
         http
                 .cors().configurationSource(corsConfigurationSource());
+                customConfigurer(http);
     }
 
+
+
+    private void customConfigurer(HttpSecurity http) throws Exception {
+        http
+                .apply(new JsonSecurityConfigurer<>(loginUrl, objectMapper))
+                .successHandlerAjax(jsonAuthenticationSuccessHandler())
+                .setAuthenticationManager(jsonAuthenticationManager());
+    }
+
+    public AuthenticationManager jsonAuthenticationManager() {
+        List<AuthenticationProvider> authProviderList = new ArrayList<>();
+        authProviderList.add(jsonAuthenticationProvider());
+        ProviderManager providerManager = new ProviderManager(authProviderList);
+        return providerManager;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -111,6 +134,11 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+//    @Bean
+//    public UserDetailsService userDetailsService(){
+//        return new UserInfoService();
+//    }
 
     @Bean
     public JsonAuthenticationProvider jsonAuthenticationProvider() {
