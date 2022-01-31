@@ -14,27 +14,40 @@ import com.example.backend.service.CategoryService;
 import com.example.backend.service.FileNameService;
 import com.example.backend.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doThrow;
@@ -43,12 +56,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = PostController.class
-        , excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JsonSecurityConfig.class),
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtSecurityConfig.class)
-})
+//@WebMvcTest
+//        (value = PostController.class
+//        , excludeFilters = {
+//        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JsonSecurityConfig.class),
+//        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtSecurityConfig.class)
+//})
+@WebMvcTest(value = PostController.class)
+@ActiveProfiles("local")
+//@TestPropertySource("classpath:application-test.yml")
 class PostControllerTest {
+
+    @Value("${security.jwt.secret}")
+    String secret;
+    @Value("${security.jwt.token-validity-in-seconds}")
+    Long tokenValidityInMilliseconds;
+
+
+    @MockBean
+    private JwtUtils jwtUtils;
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,8 +88,17 @@ class PostControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockBean(name = "userDetailsService")
+    private UserInfoService userInfoService;
+
+    @PostConstruct
+    public void setup() {
+        given(userInfoService.loadUserByUsername(anyString()))
+                .willReturn(new User("test", "password", AuthorityUtils.createAuthorityList()));
+    }
+
     @Test
-    @WithUserDetails
+    @WithMockUser
     void getAllTest() throws Exception {
         List<Page> posts = new ArrayList<>();
         given(postService.getAllPosts(PageRequest.of(0, 3))).willReturn(new PageImpl(posts));

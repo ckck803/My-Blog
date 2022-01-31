@@ -28,10 +28,6 @@ public class UserInfoService implements UserDetailsService {
 
     private final UserInfoRepository userInfoRepository;
 
-//    public UserInfoService(PasswordEncoder passwordEncoder, UserInfoRepository userInfoRepository){
-//        this.passwordEncoder = passwordEncoder;
-//        this.userInfoRepository = userInfoRepository;
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

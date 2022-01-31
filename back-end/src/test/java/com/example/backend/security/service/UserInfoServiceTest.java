@@ -6,7 +6,10 @@ import com.example.backend.domain.enums.Role;
 import com.example.backend.repository.UserInfoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,6 +17,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -23,26 +27,31 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@ActiveProfiles("local")
 class UserInfoServiceTest {
 
-    @MockBean
+    @Mock
     private UserInfoRepository userInfoRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private UserInfoService userInfoService;
+
+    @BeforeEach
+    void init(){
+        MockitoAnnotations.openMocks(this);
+        passwordEncoder = new BCryptPasswordEncoder();
+        this.userInfoService = new UserInfoService(passwordEncoder, userInfoRepository);
+    }
 
     @Test
     void loadUserInfo() {
+        String username = "tester";
         String email = "test@test.com";
         String password = "1q2w3e4r!";
 
         UserInfo savedUser = UserInfo.builder()
-                .username("tester")
+                .username(username)
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .userRole(Role.READ)

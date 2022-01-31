@@ -1,16 +1,11 @@
 package com.example.backend.security.config;
 
-
-import com.example.backend.repository.UserInfoRepository;
 import com.example.backend.security.fitler.JsonAuthenticationFilter;
 import com.example.backend.security.fitler.JwtAuthenticationFilter;
 import com.example.backend.security.handler.JsonAuthenticationSuccessHandler;
 import com.example.backend.security.provider.JsonAuthenticationProvider;
-import com.example.backend.security.service.UserInfoService;
-import com.example.backend.security.token.JsonAuthenticationToken;
 import com.example.backend.security.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -24,7 +19,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -37,9 +31,9 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Profile("local")
 @Order(0)
-@Profile("prod")
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${security.url.login}")
     private String loginUrl;
@@ -64,19 +58,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .authorizeRequests()
+                .antMatchers("/api/home").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/signup").permitAll()
+                .antMatchers("/logout").permitAll()
+                .anyRequest().authenticated();
+
         http
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .headers().frameOptions().disable();
-
-        http
-                .authorizeRequests()
-                .antMatchers("/api/home").permitAll()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/signup").permitAll()
-                .antMatchers("/logout").permitAll()
-                .anyRequest().authenticated();
 
         http
                 .logout()
