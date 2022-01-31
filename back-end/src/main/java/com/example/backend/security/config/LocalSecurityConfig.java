@@ -1,20 +1,24 @@
 package com.example.backend.security.config;
 
 import com.example.backend.security.config.configurer.JsonSecurityConfigurer;
+import com.example.backend.security.config.configurer.JwtSecurityConfigurer;
 import com.example.backend.security.fitler.JsonAuthenticationFilter;
 import com.example.backend.security.fitler.JwtAuthenticationFilter;
 import com.example.backend.security.handler.JsonAuthenticationSuccessHandler;
 import com.example.backend.security.provider.JsonAuthenticationProvider;
 import com.example.backend.security.service.UserInfoUserDetailsService;
 import com.example.backend.security.utils.JwtUtils;
+import com.example.backend.service.UserInfoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -23,8 +27,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -46,7 +54,6 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtUtils jwtUtils;
     private final UserInfoUserDetailsService userInfoUserDetailsService;
 
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -65,14 +72,13 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 .authorizeRequests()
-                .antMatchers("/api/home").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/signup").permitAll()
-                .antMatchers("/logout").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/posts").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/signup").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/logout").permitAll()
                 .anyRequest().authenticated();
 
         http
@@ -85,23 +91,14 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/api/logout");
 
-//        http
-//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class);
+        http
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class);
 
         http
                 .cors().configurationSource(corsConfigurationSource());
-                customConfigurer(http);
     }
 
-
-
-    private void customConfigurer(HttpSecurity http) throws Exception {
-        http
-                .apply(new JsonSecurityConfigurer<>(loginUrl, objectMapper))
-                .successHandlerAjax(jsonAuthenticationSuccessHandler())
-                .setAuthenticationManager(jsonAuthenticationManager());
-    }
 
     public AuthenticationManager jsonAuthenticationManager() {
         List<AuthenticationProvider> authProviderList = new ArrayList<>();
@@ -134,11 +131,6 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        return new UserInfoService();
-//    }
 
     @Bean
     public JsonAuthenticationProvider jsonAuthenticationProvider() {

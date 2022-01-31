@@ -29,16 +29,4 @@ public class AuthController {
     @GetMapping("/logout")
     public void logout() {
     }
-
-    @PostConstruct
-    public void init(){
-        RequestRegisterUser registerUser = new RequestRegisterUser();
-        registerUser.setUsername("test");
-        registerUser.setEmail("test@test.com");
-        registerUser.setPassword("1234");
-        UserInfo userInfo = userInfoService.saveUser(registerUser);
-        userInfo.changeState(true);
-
-        userInfoService.changeUserState(userInfo.getEmail());
-    }
 }

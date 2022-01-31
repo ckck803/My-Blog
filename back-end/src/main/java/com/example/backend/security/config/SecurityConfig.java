@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .authenticationProvider(jsonAuthenticationProvider())
-                .userDetailsService(userInfoUserDetailsService);
+                .userDetailsService(userInfoUserDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
 
@@ -72,9 +74,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/api/home").permitAll()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/signup").permitAll()
-                .antMatchers("/logout").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/posts").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/signup").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/logout").permitAll()
                 .anyRequest().authenticated();
 
         http
@@ -82,34 +85,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/api/logout");
 
         http
-                .addFilterBefore(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class)
-                ;
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class);
 
         http
                 .cors().configurationSource(corsConfigurationSource());
-
-//        customConfigurer(http);
     }
-//
-//    private void customConfigurer(HttpSecurity http) throws Exception {
-//        http
-//                .apply(new JsonSecurityConfigurer<>(loginUrl, objectMapper))
-//                .successHandlerAjax(jsonAuthenticationSuccessHandler())
-////                .failureHandlerAjax(ajaxAuthenticationFailureHandler)
-////                .loginProcessingUrl(loginUrl)
-//                .setAuthenticationManager(jsonAuthenticationManager());
-////                .readAndWriteMapper(objectMapper);
-//
-//    }
 
-//    public AuthenticationManager jsonAuthenticationManager() {
-//        List<AuthenticationProvider> authProviderList = new ArrayList<>();
-//        authProviderList.add(jsonAuthenticationProvider());
-//        ProviderManager providerManager = new ProviderManager(authProviderList);
-//        return providerManager;
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

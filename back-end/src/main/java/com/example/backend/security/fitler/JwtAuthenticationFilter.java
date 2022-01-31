@@ -27,14 +27,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
 
-    @Value("${security.url.login}")
-    private String loginUrl;
-
-    @Value("${security.url.signup}")
-    private String signupUrl;
-
-    @Value("${security.url.logout}")
-    private String logoutUrl;
+//    @Value("${security.url.login}")
+//    private String loginUrl;
+//
+//    @Value("${security.url.signup}")
+//    private String signupUrl;
+//
+//    @Value("${security.url.logout}")
+//    private String logoutUrl;
 
 
     public static final RequestMatcher DEFAULT_JWT_MATCHER = new DefaultRequiresJwtMatcher();
@@ -46,43 +46,49 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
 
-        if(!isExclusiveUrl(request)){
-            String token = "";
-            String tokenHeader = request.getHeader("Authorization");
+//        if(!isExclusiveUrl(request)){
+//            String token = "";
+//            String tokenHeader = request.getHeader("Authorization");
+//
+//            if(tokenHeader != null && tokenHeader.startsWith("Bearer")){
+//                token = tokenHeader.substring(7);
+//            }
+//
+//            if(token != null && jwtUtils.validateToken(token)){
+//                Authentication authentication = jwtUtils.getAuthentication(token);
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//            }
+//        }
 
-            if(tokenHeader != null && tokenHeader.startsWith("Bearer")){
-                token = tokenHeader.substring(7);
-            }
+        String token = "";
+        String tokenHeader = request.getHeader("Authorization");
 
-            if(token != null && jwtUtils.validateToken(token)){
-                Authentication authentication = jwtUtils.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        if(tokenHeader != null && tokenHeader.startsWith("Bearer")){
+            token = tokenHeader.substring(7);
+        }
+
+        if(token != null && jwtUtils.validateToken(token)){
+            Authentication authentication = jwtUtils.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
     }
-
-    private boolean isExclusiveUrl(HttpServletRequest request){
-        List<RequestMatcher> requestMatcher = new ArrayList<>();
-        requestMatcher.add(new AntPathRequestMatcher(loginUrl));
-        requestMatcher.add(new AntPathRequestMatcher(signupUrl));
-        requestMatcher.add(new AntPathRequestMatcher(logoutUrl));
-
-        for (RequestMatcher matcher : requestMatcher) {
-            if(matcher.matches(request)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public void setRequireJwtProtectionMatcher(RequestMatcher requireJwtAuthenticationMatcher) {
-        Assert.notNull(requireJwtAuthenticationMatcher, "requireJwtProtectionMatcher cannot be null");
-        this.requireJwtAuthenticationMatcher = requireJwtAuthenticationMatcher;
-    }
-
+//
+//    private boolean isExclusiveUrl(HttpServletRequest request){
+//        List<RequestMatcher> requestMatcher = new ArrayList<>();
+//        requestMatcher.add(new AntPathRequestMatcher(loginUrl));
+//        requestMatcher.add(new AntPathRequestMatcher(signupUrl));
+//        requestMatcher.add(new AntPathRequestMatcher(logoutUrl));
+//
+//        for (RequestMatcher matcher : requestMatcher) {
+//            if(matcher.matches(request)){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//
     private static final class DefaultRequiresJwtMatcher implements RequestMatcher {
         private final HashSet<String> allowedMethods = new HashSet<>(Arrays.asList("GET", "HEAD", "TRACE", "OPTIONS"));
 
