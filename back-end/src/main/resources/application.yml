@@ -14,9 +14,9 @@ file:
 
 security:
   url:
-    login: /api/login
-    signup: /api/signup
-    logout: /api/logout
+    login: /api/auth/login
+    signup: /api/auth/signup
+    logout: /api/auth/logout
   jwt:
     header: Token
     secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits

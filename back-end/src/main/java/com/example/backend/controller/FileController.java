@@ -22,13 +22,14 @@ import java.net.URISyntaxException;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api/file")
 public class FileController {
 
     @Value("${file.path}")
     private String filePath;
     private final FileNameService fileNameService;
 
-    @PostMapping("/file/upload")
+    @PostMapping("/upload")
     public ResponseEntity uploadFile(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) throws URISyntaxException {
 
         if(multipartFile.isEmpty()){
@@ -42,7 +43,7 @@ public class FileController {
         return ResponseEntity.created(uri).body(storedFileName);
     }
 
-    @GetMapping("/file/{storedFileName}")
+    @GetMapping("/{storedFileName}")
     public Resource getFile(@PathVariable("storedFileName") String storedFileName) throws MalformedURLException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("file:");

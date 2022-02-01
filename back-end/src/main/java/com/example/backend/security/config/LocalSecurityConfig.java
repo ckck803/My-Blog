@@ -1,5 +1,6 @@
 package com.example.backend.security.config;
 
+import com.example.backend.domain.enums.Role;
 import com.example.backend.security.config.configurer.JsonSecurityConfigurer;
 import com.example.backend.security.config.configurer.JwtSecurityConfigurer;
 import com.example.backend.security.fitler.JsonAuthenticationFilter;
@@ -73,23 +74,27 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/posts").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/signup").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/logout").permitAll()
-                .anyRequest().authenticated();
-
-        http
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .headers().frameOptions().disable();
 
         http
+                .authorizeRequests()
+                .antMatchers("/api/home").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/auth/logout").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/post/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/post/new").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.PATCH,"/api/post/update/**").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.DELETE,"/api/post/delete/**").hasRole(Role.WRITE.name())
+                .anyRequest().authenticated();
+
+        http
                 .logout()
-                .logoutUrl("/api/logout");
+                .logoutUrl("/api/auth/logout");
 
         http
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

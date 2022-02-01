@@ -1,10 +1,7 @@
 package com.example.backend.domain;
 
 import com.example.backend.domain.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 public class UserInfo extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +43,11 @@ public class UserInfo extends BaseEntity {
 
     public UserInfo changeState(boolean isAuthenticated){
         this.state = isAuthenticated;
+        return this;
+    }
+
+    public UserInfo changeRole(Role role){
+        this.userRole = role;
         return this;
     }
 }

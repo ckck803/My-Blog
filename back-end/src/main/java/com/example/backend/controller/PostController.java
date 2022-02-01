@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/post")
 public class PostController {
 
     private final PostService postService;
@@ -37,7 +37,7 @@ public class PostController {
         return "Hello World";
     }
 
-    @GetMapping("/posts")
+    @GetMapping("")
     public ResponseEntity getPosts(@PageableDefault(page = 0, size = 5, sort = ("id"), direction = Sort.Direction.DESC) Pageable pageable){
         Long id = 1L;
         Page<Post> allPosts = postService.getAllPosts(pageable);
@@ -84,7 +84,7 @@ public class PostController {
                 .content(requestPostDto.getContent())
                 .build();
 
-        post.changePost(category);
+        post.changeCategory(category);
         Post savedPost = postService.savePost(post);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -95,7 +95,7 @@ public class PostController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity retrievePost(@PathVariable("id") Long id){
         Post post = postService.getPost(id);
 

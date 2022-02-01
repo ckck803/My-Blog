@@ -1,9 +1,6 @@
 package com.example.backend.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,4 +21,12 @@ public class Category extends BaseEntity{
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
+
+    public Category addPost(Post post){
+        if(posts == null){
+            posts = new ArrayList<>();
+        }
+        posts.add(post);
+        return this;
+    }
 }

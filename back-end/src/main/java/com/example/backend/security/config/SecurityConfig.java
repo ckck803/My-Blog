@@ -1,6 +1,7 @@
 package com.example.backend.security.config;
 
 
+import com.example.backend.domain.enums.Role;
 import com.example.backend.security.fitler.JsonAuthenticationFilter;
 import com.example.backend.security.fitler.JwtAuthenticationFilter;
 import com.example.backend.security.handler.JsonAuthenticationSuccessHandler;
@@ -74,15 +75,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/api/home").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/posts").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/signup").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/logout").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/auth/logout").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/post/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/post/new").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.PATCH,"/api/post/update/**").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.DELETE,"/api/post/delete/**").hasRole(Role.WRITE.name())
                 .anyRequest().authenticated();
 
         http
                 .logout()
-                .logoutUrl("/api/logout");
+                .logoutUrl("/api/auth/logout");
 
         http
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

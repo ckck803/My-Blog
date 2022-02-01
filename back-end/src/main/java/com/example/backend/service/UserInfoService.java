@@ -29,6 +29,8 @@ public class UserInfoService {
                     .userRole(Role.READ)
                     .build();
 
+            System.out.println("userInfo = " + userInfo.toString());
+
             return userInfoRepository.save(userInfo);
         }catch (Exception e){
             throw new IllegalStateException("저장에 실패 했습니다.");
@@ -44,6 +46,18 @@ public class UserInfoService {
         }
 
         UserInfo userInfo = optional.get();
-        return userInfo.changeState(true);
+        return userInfo.changeState(!userInfo.isState());
+    }
+
+    @Transactional
+    public UserInfo changeUserRole(String email, Role role){
+        Optional<UserInfo> optional = userInfoRepository.findUserInfoByEmail(email);
+
+        if(optional.isEmpty()){
+            throw new UsernameNotFoundException("해당 사용자가 존재하지 않습니다.");
+        }
+
+        UserInfo userInfo = optional.get();
+        return userInfo.changeRole(role);
     }
 }
