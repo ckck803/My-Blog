@@ -78,16 +78,17 @@ class PostControllerTest {
     @PostConstruct
     public void setup() {
         given(userInfoUserDetailsService.loadUserByUsername(anyString()))
-                .willReturn(new User("test", "password", AuthorityUtils.createAuthorityList()));
+                .willReturn(new User("test", "password", AuthorityUtils.createAuthorityList("ROLE_WRITE")));
     }
 
     @Test
     @WithMockUser
+//    @WithMockUser(username = "test", roles = "ROLE_WRITE")
     void getAllTest() throws Exception {
         List<Page> posts = new ArrayList<>();
         given(postService.getAllPosts(PageRequest.of(0, 3))).willReturn(new PageImpl(posts));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/posts"));
+        ResultActions resultActions = mockMvc.perform(get("/api/post"));
 
         resultActions
                 .andExpect(status().isOk());
@@ -131,7 +132,7 @@ class PostControllerTest {
 
         String requestBody = objectMapper.writeValueAsString(requestPostDto);
 
-        ResultActions resultActions = mockMvc.perform(post("/api/new")
+        ResultActions resultActions = mockMvc.perform(post("/api/post/new")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -168,7 +169,7 @@ class PostControllerTest {
 
         String requestBody = objectMapper.writeValueAsString(requestPostDto);
 
-        ResultActions resultActions = mockMvc.perform(post("/api/new")
+        ResultActions resultActions = mockMvc.perform(post("/api/post/new")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -185,7 +186,7 @@ class PostControllerTest {
     void deletePostTest() throws Exception {
         Long id = 1L;
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/delete/" + id));
+        ResultActions resultActions = mockMvc.perform(delete("/api/post/delete/" + id));
 
         resultActions
                 .andExpect(status().isOk())
