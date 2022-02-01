@@ -28,8 +28,8 @@ security:
       - GET /api/auth/logout
       - GET /api/post/**
 
-logging:
-  level:
-    org:
-      springframework:
-        security: debug
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: debug

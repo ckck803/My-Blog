@@ -35,6 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        log.debug("Request.getRequestURL() = {}", request.getRequestURL());
         if(!skipJwtAuthenticationMatcher.matches(request)) {
             String token = "";
             String tokenHeader = request.getHeader("Authorization");
@@ -64,9 +65,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         private AntPathRequestMatcher getAntPathRequestMatcher(String info) {
             String[] methodAndPath = info.split(" ");
+            String url = info;
             String httpMethod = null;
 
             if(methodAndPath.length > 1) {
+                url = methodAndPath[1];
+
                 if (methodAndPath[0].equals("GET")) {
                     httpMethod = HttpMethod.GET.toString();
                 } else if (methodAndPath[0].equals("POST")) {
@@ -78,9 +82,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 } else if (methodAndPath[0].equals("DELETE")) {
                     httpMethod = HttpMethod.DELETE.toString();
                 }
-                log.info("Http Method : {}, excluded Url : {}", methodAndPath[0], methodAndPath[1]);
+
+                log.debug("Http Method : {}, excluded Url : {}", httpMethod, url);
             }
-            return new AntPathRequestMatcher(info, httpMethod);
+            return new AntPathRequestMatcher(url, httpMethod);
         }
 
         @Override

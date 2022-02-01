@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.controller.dto.RequestRegisterUser;
 import com.example.backend.domain.UserInfo;
+import com.example.backend.domain.enums.Role;
 import com.example.backend.security.service.UserInfoUserDetailsService;
 import com.example.backend.service.UserInfoService;
 import lombok.RequiredArgsConstructor;
@@ -29,4 +30,16 @@ public class AuthController {
     @GetMapping("/logout")
     public void logout() {
     }
+
+//    @PostConstruct
+//    public void init(){
+//        RequestRegisterUser registerUser = new RequestRegisterUser();
+//        registerUser.setUsername("test");
+//        registerUser.setEmail("test@test.com");
+//        registerUser.setPassword("1234");
+//        UserInfo userInfo = userInfoService.saveUser(registerUser);
+//
+//        userInfoService.changeUserState(userInfo.getEmail());
+//        userInfoService.changeUserRole(userInfo.getEmail(), Role.WRITE);
+//    }
 }

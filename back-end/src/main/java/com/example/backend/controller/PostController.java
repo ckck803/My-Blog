@@ -137,9 +137,12 @@ public class PostController {
 
         return ResponseEntity.ok().build();
     }
-
+//
 //    @PostConstruct
 //    public void init(){
+//        String categoryName = "Category";
+//        Category category = categoryService.saveOrFindCategory(categoryName);
+//
 //        Post post = Post.builder()
 //                .title("test1")
 //                .subTitle("test1")
@@ -147,6 +150,7 @@ public class PostController {
 //                        "\n" +
 //                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
 //                .build();
+//        post.changeCategory(category);
 //        postService.savePost(post);
 //
 //        Post post2 = Post.builder()
@@ -156,6 +160,7 @@ public class PostController {
 //                        "\n" +
 //                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
 //                .build();
+//        post2.changeCategory(category);
 //        postService.savePost(post2);
 //    }
 }
