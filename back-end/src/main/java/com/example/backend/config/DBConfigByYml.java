@@ -9,11 +9,11 @@ import org.springframework.context.annotation.PropertySource;
 
 import javax.sql.DataSource;
 
-@Profile("prod")
+//@Profile("prod")
 //@Configuration
-@PropertySource(value = "classpath:application-mysql.yml"
-        , factory = YamlPropertySourceFactory.class
-        , ignoreResourceNotFound = true)
+//@PropertySource(value = "classpath:application-mysql.yml"
+//        , factory = YamlPropertySourceFactory.class
+//        , ignoreResourceNotFound = true)
 public class DBConfigByYml {
 
     @Value("${spring.datasource.driver-class-name}")

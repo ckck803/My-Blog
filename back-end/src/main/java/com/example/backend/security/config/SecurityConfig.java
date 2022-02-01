@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -30,7 +31,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -77,13 +80,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/home").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/auth/logout").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/post/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/auth/logout").permitAll();
+
+        http
+                .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/api/post/new").hasRole(Role.WRITE.name())
                 .antMatchers(HttpMethod.PATCH,"/api/post/update/**").hasRole(Role.WRITE.name())
                 .antMatchers(HttpMethod.DELETE,"/api/post/delete/**").hasRole(Role.WRITE.name())
-                .anyRequest().authenticated();
+//                .antMatchers(HttpMethod.GET,"/api/post/detail/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/post/**").permitAll();
 
+        http
+                .authorizeRequests()
+                .antMatchers("/api/file/upload/**").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.GET,"/api/file/**").permitAll()
+                .anyRequest().authenticated();
         http
                 .logout()
                 .logoutUrl("/api/auth/logout");
@@ -102,9 +113,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+
+    @Bean (name = "excludedUrls")
+    @ConfigurationProperties( prefix = "security.exclude.url" )
+    public List<String> excludedUrls(){
+        return new ArrayList<>();
+    }
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtils);
+        return new JwtAuthenticationFilter(jwtUtils, excludedUrls());
     }
 
     @Bean

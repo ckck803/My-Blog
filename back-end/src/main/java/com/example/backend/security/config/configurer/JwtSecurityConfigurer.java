@@ -31,17 +31,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtSecurityConfigurer <H extends HttpSecurityBuilder<H>>
         extends AbstractHttpConfigurer<JwtSecurityConfigurer<H>, H> {
-
-    private final JwtUtils jwtUtils;
-
-    @Override
-    public void init(H builder) throws Exception {
-        super.init(builder);
-    }
-
-    @Override
-    public void configure(H builder) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
-        builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    }
+//
+//    private final JwtUtils jwtUtils;
+//
+//    @Override
+//    public void init(H builder) throws Exception {
+//        super.init(builder);
+//    }
+//
+//    @Override
+//    public void configure(H builder) throws Exception {
+//        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
+//        builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//    }
 }

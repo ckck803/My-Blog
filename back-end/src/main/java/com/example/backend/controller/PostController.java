@@ -95,7 +95,7 @@ public class PostController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity retrievePost(@PathVariable("id") Long id){
         Post post = postService.getPost(id);
 

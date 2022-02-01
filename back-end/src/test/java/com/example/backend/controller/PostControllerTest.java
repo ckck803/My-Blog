@@ -83,7 +83,6 @@ class PostControllerTest {
 
     @Test
     @WithMockUser
-//    @WithMockUser(username = "test", roles = "ROLE_WRITE")
     void getAllTest() throws Exception {
         List<Page> posts = new ArrayList<>();
         given(postService.getAllPosts(PageRequest.of(0, 3))).willReturn(new PageImpl(posts));

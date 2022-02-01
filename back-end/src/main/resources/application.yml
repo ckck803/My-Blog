@@ -21,6 +21,12 @@ security:
     header: Token
     secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
     token-validity-in-seconds: 86400000
+  exclude:
+    url:
+      - GET /h2-console/**
+      - POST /api/auth/signup
+      - GET /api/auth/logout
+      - GET /api/post/**
 
 logging:
   level:

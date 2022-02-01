@@ -11,9 +11,9 @@ import javax.sql.DataSource;
 
 //@Configuration
 //@Profile("local")
-@PropertySource(value = "classpath:application-local.yml"
-        , factory = YamlPropertySourceFactory.class
-        , ignoreResourceNotFound = true)
+//@PropertySource(value = "classpath:application-local.yml"
+//        , factory = YamlPropertySourceFactory.class
+//        , ignoreResourceNotFound = true)
 public class LocalDBConfigByYml {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
