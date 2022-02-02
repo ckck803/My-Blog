@@ -38,11 +38,26 @@ jobs:
       # with:
       #   arguments: build
 
-    - name: Deploy Remote Server
-      uses: appleboy/ssh-action@v0.1.4
+    - name: Deploy Remote Serve
+      uses: appleboy/scp-action@v0.1.2
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
+        source: "back-end/build/libs/*.jar"
+        target: "blog"
+        strip_components: 3
         # script: whoami
+      
+
+
+    # - name: Deploy Remote Server
+    #   uses: appleboy/ssh-action@v0.1.4
+    #   with:
+    #     host: ${{ secrets.HOST }}
+    #     username: ${{ secrets.USERNAME }}
+    #     password: ${{ secrets.PASSWORD }}
+    #     port: ${{ secrets.PORT }}
+    #     source: "build/libs/*.jar"
+    #     # script: whoami
