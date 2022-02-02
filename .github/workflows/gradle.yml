@@ -37,3 +37,12 @@ jobs:
       working-directory: ${{ env.working-directory }}
       # with:
       #   arguments: build
+
+    - name: Deploy Remote Server
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        # username: ${{ secrets.USERNAME }}
+        # password: ${{ secrets.PASSWORD }}
+        # port: ${{ secrets.PORT }}
+        # script: whoami
