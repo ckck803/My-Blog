@@ -38,6 +38,24 @@ jobs:
       # with:
       #   arguments: build
 
+    - name: Stop Application
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          PID=`$(ps -ef | grep java | grep back-end | awk '{print $2}')`
+          echo $PID
+          if [ -z "$PID" ]; then
+            echo "> 실행중인 프로그램이 없습니다."
+          else
+            echo "> 실행중인 프로그램을 종료합니다."
+            echo "> kill -9 $PID"
+            kill -9 $PID
+          fi
+
     - name: Deploy Remote Serve
       uses: appleboy/scp-action@v0.1.2
       with:
@@ -49,15 +67,25 @@ jobs:
         target: "blog"
         strip_components: 3
         # script: whoami
-      
 
-
-    # - name: Deploy Remote Server
-    #   uses: appleboy/ssh-action@v0.1.4
-    #   with:
-    #     host: ${{ secrets.HOST }}
-    #     username: ${{ secrets.USERNAME }}
-    #     password: ${{ secrets.PASSWORD }}
-    #     port: ${{ secrets.PORT }}
-    #     source: "build/libs/*.jar"
-    #     # script: whoami
+    - name: Run Application
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          if [ -f /home/airis/myblog/config/application-mysql.yml ]; then
+            echo "> application-mysql파일이 존재합니다."
+            echo "> Database: MySQL"
+            echo "> nohup java -jar -Dspring.profiles.active=prod ${HOME}/myblog/*.jar"
+            nohup java -jar -Dspring.profiles.active=prod ${HOME}/myblog/*.jar &
+          # else
+          #   echo "> application-mysql파일이 없습니다."
+          #   echo "> Database: H2"
+          #   echo "> nohup java -jar /home/airis/myblog/sample-board-0.0.1-SNAPSHOT.jar"
+          #   nohup java -jar /home/airis/myblog/sample-board-0.0.1-SNAPSHOT.jar &
+          fi	
+          sleep 1
+          echo "> 실행을 완료 했습니다."
