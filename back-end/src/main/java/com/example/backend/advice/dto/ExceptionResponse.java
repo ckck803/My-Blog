@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExceptionResponse {
-    private LocalDateTime timestamp;
+    private Date timestamp;
     private String message;
     private String details;
 }

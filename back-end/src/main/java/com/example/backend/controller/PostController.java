@@ -39,7 +39,7 @@ public class PostController {
 
     @GetMapping("")
     public ResponseEntity getPosts(@PageableDefault(page = 0, size = 5, sort = ("id"), direction = Sort.Direction.DESC) Pageable pageable){
-        Long id = 1L;
+//        Long id = 1L;
         Page<Post> allPosts = postService.getAllPosts(pageable);
 
         if(allPosts == null){
@@ -50,7 +50,7 @@ public class PostController {
         List<ResponsePostDto> postList = new ArrayList<>();
         for (Post post : allPosts) {
             ResponsePostDto postDto = ResponsePostDto.builder()
-                    .id(id++)
+                    .id(post.getId())
                     .title(post.getTitle())
                     .subTitle(post.getSubTitle())
                     .content(post.getContent())
@@ -162,6 +162,57 @@ public class PostController {
 //                .build();
 //        post2.changeCategory(category);
 //        postService.savePost(post2);
+//
+//        Post post3 = Post.builder()
+//                .title("test3")
+//                .subTitle("test3")
+//                .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus in massa tempor nec feugiat nisl pretium. Vehicula ipsum a arcu cursus. At auctor urna nunc id cursus metus aliquam eleifend mi. Nunc mattis enim ut tellus elementum sagittis. Sed euismod nisi porta lorem. Praesent elementum facilisis leo vel fringilla. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Quis lectus nulla at volutpat diam. Erat velit scelerisque in dictum. Nisl suscipit adipiscing bibendum est ultricies. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam sit amet nisl purus in mollis nunc.\n" +
+//                        "\n" +
+//                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
+//                .build();
+//        post3.changeCategory(category);
+//        postService.savePost(post3);
+//
+//        Post post4 = Post.builder()
+//                .title("test4")
+//                .subTitle("test4")
+//                .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus in massa tempor nec feugiat nisl pretium. Vehicula ipsum a arcu cursus. At auctor urna nunc id cursus metus aliquam eleifend mi. Nunc mattis enim ut tellus elementum sagittis. Sed euismod nisi porta lorem. Praesent elementum facilisis leo vel fringilla. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Quis lectus nulla at volutpat diam. Erat velit scelerisque in dictum. Nisl suscipit adipiscing bibendum est ultricies. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam sit amet nisl purus in mollis nunc.\n" +
+//                        "\n" +
+//                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
+//                .build();
+//        post4.changeCategory(category);
+//        postService.savePost(post4);
+//
+//        Post post5 = Post.builder()
+//                .title("test5")
+//                .subTitle("test5")
+//                .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus in massa tempor nec feugiat nisl pretium. Vehicula ipsum a arcu cursus. At auctor urna nunc id cursus metus aliquam eleifend mi. Nunc mattis enim ut tellus elementum sagittis. Sed euismod nisi porta lorem. Praesent elementum facilisis leo vel fringilla. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Quis lectus nulla at volutpat diam. Erat velit scelerisque in dictum. Nisl suscipit adipiscing bibendum est ultricies. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam sit amet nisl purus in mollis nunc.\n" +
+//                        "\n" +
+//                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
+//                .build();
+//        post5.changeCategory(category);
+//        postService.savePost(post5);
+//
+//        Post post6 = Post.builder()
+//                .title("test6")
+//                .subTitle("test6")
+//                .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus in massa tempor nec feugiat nisl pretium. Vehicula ipsum a arcu cursus. At auctor urna nunc id cursus metus aliquam eleifend mi. Nunc mattis enim ut tellus elementum sagittis. Sed euismod nisi porta lorem. Praesent elementum facilisis leo vel fringilla. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Quis lectus nulla at volutpat diam. Erat velit scelerisque in dictum. Nisl suscipit adipiscing bibendum est ultricies. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam sit amet nisl purus in mollis nunc.\n" +
+//                        "\n" +
+//                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
+//                .build();
+//        post6.changeCategory(category);
+//        postService.savePost(post6);
+//
+//
+//        Post post7 = Post.builder()
+//                .title("test7")
+//                .subTitle("test7")
+//                .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus in massa tempor nec feugiat nisl pretium. Vehicula ipsum a arcu cursus. At auctor urna nunc id cursus metus aliquam eleifend mi. Nunc mattis enim ut tellus elementum sagittis. Sed euismod nisi porta lorem. Praesent elementum facilisis leo vel fringilla. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Quis lectus nulla at volutpat diam. Erat velit scelerisque in dictum. Nisl suscipit adipiscing bibendum est ultricies. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam sit amet nisl purus in mollis nunc.\n" +
+//                        "\n" +
+//                        "Ante in nibh mauris cursus. Adipiscing at in tellus integer. Placerat duis ultricies lacus sed turpis tincidunt id. Consequat interdum varius sit amet. Tortor aliquam nulla facilisi cras. Elementum tempus egestas sed sed. Ut tortor pretium viverra suspendisse potenti nullam ac tortor. Duis tristique sollicitudin nibh sit amet commodo nulla. Nibh sed pulvinar proin gravida. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Volutpat est velit egestas dui id ornare arcu. Aliquam vestibulum morbi blandit cursus risus at ultrices. Nibh sed pulvinar proin gravida hendrerit lectus. Faucibus ornare suspendisse sed nisi lacus sed viverra tellus in. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Aenean et tortor at risus viverra adipiscing at in. Iaculis urna id volutpat lacus laoreet non curabitur gravida.")
+//                .build();
+//        post7.changeCategory(category);
+//        postService.savePost(post7);
 //    }
 }
 

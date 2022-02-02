@@ -1,6 +1,7 @@
 package com.example.backend.security.config;
 
 import com.example.backend.domain.enums.Role;
+import com.example.backend.security.fitler.ExceptionHandlerFilter;
 import com.example.backend.security.fitler.JsonAuthenticationFilter;
 import com.example.backend.security.fitler.JwtAuthenticationFilter;
 import com.example.backend.security.handler.JsonAuthenticationSuccessHandler;
@@ -27,6 +28,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,6 +50,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final JwtUtils jwtUtils;
     private final UserInfoUserDetailsService userInfoUserDetailsService;
+
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
 
 
     @Override
@@ -103,7 +107,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class);
+                .addFilterBefore(jsonAuthenticationFilter(), JwtAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, LogoutFilter.class);
 
         http
                 .cors().configurationSource(corsConfigurationSource());

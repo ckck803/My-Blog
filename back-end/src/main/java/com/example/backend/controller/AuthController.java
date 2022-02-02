@@ -30,7 +30,7 @@ public class AuthController {
     @GetMapping("/logout")
     public void logout() {
     }
-
+//
 //    @PostConstruct
 //    public void init(){
 //        RequestRegisterUser registerUser = new RequestRegisterUser();
