@@ -76,4 +76,16 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          sh ${HOME}/script/myblog_script.sh
+          if [ -f /home/airis/myblog/config/application-mysql.yml ]; then
+            echo "> application-mysql파일이 존재합니다."
+            echo "> Database: MySQL"
+            echo "> nohup java -jar -Dspring.profiles.active=prod ${HOME}/myblog/*.jar"
+            nohup java -jar -Dspring.profiles.active=prod ${HOME}/myblog/*.jar >> nohup.out 2>&1 &
+          # else
+          #   echo "> application-mysql파일이 없습니다."
+          #   echo "> Database: H2"
+          #   echo "> nohup java -jar /home/airis/myblog/sample-board-0.0.1-SNAPSHOT.jar"
+          #   nohup java -jar /home/airis/myblog/sample-board-0.0.1-SNAPSHOT.jar &
+          fi	
+          sleep 1
+          echo "> 실행을 완료 했습니다."
