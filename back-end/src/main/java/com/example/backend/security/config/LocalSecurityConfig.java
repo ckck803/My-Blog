@@ -29,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -75,30 +76,38 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("excludedUrls : {}", excludedUrls());
 
         http
-                .csrf().disable()
+//                .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .headers().frameOptions().disable();
 
         http
-                .authorizeRequests()
-                .antMatchers("/api/home").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/auth/logout").permitAll();
+                .csrf().disable()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                ;
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/api/post/new").hasRole(Role.WRITE.name())
-                .antMatchers(HttpMethod.PATCH,"/api/post/update/**").hasRole(Role.WRITE.name())
-                .antMatchers(HttpMethod.DELETE,"/api/post/delete/**").hasRole(Role.WRITE.name())
-                .antMatchers(HttpMethod.GET,"/api/post/**").permitAll();
+                .antMatchers("/api/home").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/v3/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/auth/logout").permitAll();
+
+        http
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/post/new").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.PATCH, "/api/post/update/**").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.DELETE, "/api/post/delete/**").hasRole(Role.WRITE.name())
+                .antMatchers(HttpMethod.GET, "/api/post/**").permitAll();
 
         http
                 .authorizeRequests()
                 .antMatchers("/api/file/upload/**").hasRole(Role.WRITE.name())
-                .antMatchers(HttpMethod.GET,"/api/file/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/file/**").permitAll()
                 .anyRequest().authenticated();
 
         http
@@ -114,9 +123,9 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().configurationSource(corsConfigurationSource());
     }
 
-    @Bean (name = "excludedUrls")
-    @ConfigurationProperties( prefix = "security.exclude.url" )
-    public List<String> excludedUrls(){
+    @Bean(name = "excludedUrls")
+    @ConfigurationProperties(prefix = "security.exclude.url")
+    public List<String> excludedUrls() {
         return new ArrayList<>();
     }
 

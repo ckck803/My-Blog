@@ -2,12 +2,16 @@ package com.example.backend.security.fitler;
 
 import com.example.backend.security.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -15,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         log.info("Request URL = {}", request.getRequestURL());
-        if(!skipJwtAuthenticationMatcher.matches(request)) {
+        if(!skipJwtAuthenticationMatcher.matches(request) &&
+                !PathRequest.toStaticResources().atCommonLocations().matches(request)) {
             String token = "";
             String tokenHeader = request.getHeader("Authorization");
 
@@ -56,11 +62,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public class SkipJwtAuthenticationMatcher implements RequestMatcher {
         private OrRequestMatcher skipMatchers;
 
+        private List<RequestMatcher> skipResources;
+
         public SkipJwtAuthenticationMatcher(List<String> pathsToSkip) {
-            List<RequestMatcher> m = pathsToSkip.stream()
+            skipResources = pathsToSkip.stream()
                     .map(this::getAntPathRequestMatcher)
                     .collect(Collectors.toList());
-            skipMatchers = new OrRequestMatcher(m);
+            addStaticResources();
+            skipMatchers = new OrRequestMatcher(skipResources);
+        }
+
+        private void addStaticResources() {
+             this.skipResources.addAll(
+                    Arrays.asList(PathRequest.toStaticResources().atCommonLocations()));
         }
 
         private AntPathRequestMatcher getAntPathRequestMatcher(String info) {
@@ -83,7 +97,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     httpMethod = HttpMethod.DELETE.toString();
                 }
 
-                log.debug("Http Method : {}, excluded Url : {}", httpMethod, url);
+                log.info("Http Method : {}, excluded Url : {}", httpMethod, url);
             }
             return new AntPathRequestMatcher(url, httpMethod);
         }

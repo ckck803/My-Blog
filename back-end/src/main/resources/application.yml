@@ -23,10 +23,19 @@ security:
     token-validity-in-seconds: 86400000
   exclude:
     url:
-      - GET /h2-console/**
+#      - GET /h2-console/**
       - POST /api/auth/signup
       - GET /api/auth/logout
       - GET /api/post/**
+#      - /static/**
+#      - /css/**
+#      - /js/**
+#      - /static/css/images/**
+#      - /webjars/**
+#      - /**/favicon.ico
+      - /swagger-resources/**
+      - /swagger-ui/**
+      - /v3/**
 
 #logging:
 #  level:
