@@ -20,7 +20,7 @@ public class Category extends BaseEntity{
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
 
     public Category addPost(Post post){
         if(posts == null){

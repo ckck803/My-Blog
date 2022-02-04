@@ -17,7 +17,7 @@ import java.util.Date;
 public class AuthControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public final ResponseEntity<Object> handleExpiredJwtException(Exception ex, WebRequest request){
+    public final ResponseEntity<ExceptionResponse> handleExpiredJwtException(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
@@ -25,7 +25,7 @@ public class AuthControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public final ResponseEntity<Object> handleIllegalArgumentException(Exception ex, WebRequest request){
+    public final ResponseEntity<ExceptionResponse> handleIllegalArgumentException(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
