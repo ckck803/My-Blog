@@ -42,6 +42,8 @@ dependencies {
     // Session jdbc
     implementation 'org.springframework.session:spring-session-jdbc'
 
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2',
