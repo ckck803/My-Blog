@@ -31,6 +31,7 @@ const TitleContainer = styled.div`
 `;
 
 const CategoryContainer = styled.div`
+  padding-right: 2rem;
   /* padding-top: 1rem;
   padding-bottom: 1rem;
   padding-right: 2rem;
@@ -59,13 +60,13 @@ const InputTitle = styled.input`
 `;
 
 const InputCategory = styled.input`
-  padding-right: 5px;
-  padding-left: 10px;
-  padding-top: 5px;
+  padding: 0.2em 0.2em 0.2em 0.2em;
 
   border: 1px solid rgb(0, 0, 0, 0);
-  width: 400px;
+  width: 230px;
   height: 100%;
+
+  font-size: 1.17rem;
 
   &:active,
   &:focus {
@@ -73,30 +74,52 @@ const InputCategory = styled.input`
   }
 `;
 
+const CategoryLine = styled.div`
+  width: 220px;
+  border-top: 1.5px solid rgb(200, 206, 212);
+`;
+
+const Select = styled.select`
+ margin-right: 10px
+  content: "";
+  width: 170px; /* 원하는 너비설정 */
+  padding: 0.2em 0.2em 0.2em 0.2em; /* 여백으로 높이 설정 */
+  font-family: inherit; /* 폰트 상속 */
+  background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg)
+    no-repeat 95% 50%; /* 네이티브 화살표 대체 */
+  border: 1px solid #999;
+  border-radius: 1px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+`;
+
 const EditPage = () => {
   const { id } = useParams();
-  const post = useSelector((state) => state.postList.posts[id - 1]);
+  const post = useSelector((state) =>
+    state.postList.posts.find((post) => post.id === Number(id))
+  );
 
   const [form, setForm] = useState({
-    title: null,
-    subTitle: null,
-    category: null,
+    title: "",
+    subTitle: "",
+    category: "",
     content: "",
-    author: null,
+    author: "",
   });
 
   const { title, category } = form;
   const { auth } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (id) {
+    if (id && title !== "") {
       setForm({
         ...form,
         title: post.title,
         category: post.category,
       });
     }
-  });
+  }, [id, form, title]);
 
   const onClickSubmit = () => {
     console.log(form);
@@ -137,28 +160,39 @@ const EditPage = () => {
               onChange={onChange}
             />
           </h1>
-          <h5>
+          <CategoryContainer>
             <InputCategory
               placeholder="카테고리를 입력하세요"
               name="category"
               value={category}
               onChange={onChange}
             />
-          </h5>
+            <Select>
+              <option>카테고리 선택</option>
+              <option>자료구조</option>
+              <option>직접입력</option>
+            </Select>
+            <CategoryLine />
+          </CategoryContainer>
         </TitleContainer>
-        <div
-          style={{
-            position: "fixed",
-            bottom: "0",
-            width: "100%",
-          }}
-        >
-          <ToastUIEditor
-            id={id}
-            form={form}
-            setForm={setForm}
-            onClickSubmit={onClickSubmit}
-          />
+        <div>
+          <div
+            style={{
+              // position: "fixed",
+              // paddingTop: "10vh",
+              paddingTop: "6em",
+              margin: "Button",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <ToastUIEditor
+              id={id}
+              form={form}
+              setForm={setForm}
+              onClickSubmit={onClickSubmit}
+            />
+          </div>
         </div>
       </div>
     </div>

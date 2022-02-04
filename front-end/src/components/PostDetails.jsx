@@ -14,7 +14,9 @@ import { Link } from "react-router-dom";
 // import docco from "react-syntax-highlighter/dist/cjs/styles/prism/
 
 const PostDetails = ({ id }) => {
-  const post = useSelector((state) => state.postList.posts[id - 1]);
+  const post = useSelector((state) =>
+    state.postList.posts.find((post) => post.id === Number(id))
+  );
 
   const TimeLine = ({ post }) => {
     const createdTime = new Date(post);

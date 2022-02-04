@@ -13,7 +13,10 @@ import { useSelector } from "react-redux";
 dotenv.config();
 
 const ToastUIEditor = ({ form, setForm, onClickSubmit, id }) => {
-  const post = useSelector((state) => state.postList.posts[id - 1]);
+  const post = useSelector((state) =>
+    state.postList.posts.find((post) => post.id === Number(id))
+  );
+
   const editorRef = useRef();
 
   useEffect(() => {
@@ -26,15 +29,20 @@ const ToastUIEditor = ({ form, setForm, onClickSubmit, id }) => {
             let formData = new FormData();
             formData.append("file", blob);
 
+            const config = {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+                "content-type": "multipart/formdata",
+              },
+            };
+
             console.log("이미지가 업로드 됐습니다.");
             const fileStoreURL = process.env.REACT_APP_FILE_API_URL;
 
             const { data: filename } = await axios.post(
               fileStoreURL + "/upload",
               formData,
-              {
-                header: { "content-type": "multipart/formdata" },
-              }
+              config
             );
 
             const imageUrl = fileStoreURL + "/" + filename;
@@ -45,7 +53,9 @@ const ToastUIEditor = ({ form, setForm, onClickSubmit, id }) => {
 
           return false;
         });
-      editorRef.current.getInstance().setMarkdown(post.content, true);
+      if (post) {
+        editorRef.current.getInstance().setMarkdown(post.content, true);
+      }
     }
     return () => {};
   }, [editorRef, post]);
@@ -75,6 +85,8 @@ const ToastUIEditor = ({ form, setForm, onClickSubmit, id }) => {
         initialValue="hello react editor world!"
         previewStyle="vertical"
         height="75vh"
+        // height="40rem"
+        // height="0em"
         initialEditType="markdown"
         useCommandShortcut={true}
         ref={editorRef}
