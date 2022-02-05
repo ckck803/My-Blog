@@ -1,17 +1,11 @@
 import React from "react";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getPostListRequest } from "../redux/reducer/PostListReducer";
+import { useSelector } from "react-redux";
 import Comment from "./fragments/Comment";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-// import darcula from "react-syntax-highlighter/dist/esm/styles/prism/darcula";
-import darcula from "react-syntax-highlighter/dist/esm/styles/hljs/darcula";
 import { Link } from "react-router-dom";
-// import docco from "react-syntax-highlighter/dist/cjs/styles/prism/
 
 const PostDetails = ({ id }) => {
   const post = useSelector((state) =>

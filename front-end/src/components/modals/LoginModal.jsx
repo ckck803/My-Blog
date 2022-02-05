@@ -8,10 +8,8 @@ import {
   ModalBackGround,
   ModalBox,
 } from "../../assets/css/login";
-// import { loginRequest } from "../../redux/reducer/AuthReducer";
 import { loginRequest } from "../../redux/reducer/AuthReducer";
 
-// 아직도 인턴 때 봤던 gobun 변수명을 잊지 못한다...... 문화충격 그 자체..... 더 놀라운건 지금 그 팀에서 일하고 있다는 것.......
 const LoginModal = ({ isLoginOpen, onClickLogin }) => {
   const [form, setForm] = useState({
     email: "",

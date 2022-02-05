@@ -16,7 +16,6 @@ import {
   POST_NEXT_REQUEST,
 } from "../type";
 dotenv.config();
-// Authorization: "Bearer " + localStorage.getItem("token"),
 const getPostListAPI = (paging) => {
   const config = {
     headers: {
