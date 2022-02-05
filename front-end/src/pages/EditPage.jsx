@@ -1,19 +1,12 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Editor } from "@toast-ui/react-editor";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import styled from "styled-components";
-import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js";
 import dotenv from "dotenv";
-import rehypeRaw from "rehype-raw";
 import { useSelector } from "react-redux";
 
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "prismjs/themes/prism.css";
-import Header from "../components/fragments/Header";
-import Footer from "../components/fragments/Footer";
 import { useCallback } from "react";
 import ToastUIEditor from "../components/contents/ToastUIEditor";
-import { useMediaQuery } from "react-responsive";
 import { useParams } from "react-router-dom";
 import {
   CategoryContainer,
@@ -21,17 +14,37 @@ import {
   InputBorder,
   InputCategory,
   InputTitle,
-  Select,
   TitleContainer,
 } from "../assets/css/editor";
+import Select from "react-select";
 
 dotenv.config();
+
+const customStyles = {
+  control: (styles) => ({
+    ...styles,
+    width: 200,
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    borderBottom: "1px dotted pink",
+    color: state.isSelected ? "red" : "blue",
+    padding: 10,
+    // width: 200,
+  }),
+  singleValue: (provided, state) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = "opacity 300ms";
+    return { ...provided, opacity, transition };
+  },
+};
 
 const EditPage = () => {
   const { id } = useParams();
   const post = useSelector((state) =>
     state.postList.posts.find((post) => post.id === Number(id))
   );
+  const ref = useRef();
 
   const [form, setForm] = useState({
     title: "",
@@ -42,7 +55,6 @@ const EditPage = () => {
   });
 
   const { title, category } = form;
-  const { auth } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (id && title !== "") {
@@ -79,9 +91,21 @@ const EditPage = () => {
     [setForm, form]
   );
 
+  const options = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
+  ];
+
+  const onChangeSelect = ({ value, label }) => {
+    setForm({
+      ...form,
+      category: label,
+    });
+  };
+
   return (
     <div>
-      <Header />
       <div>
         <TitleContainer>
           <h1>
@@ -94,17 +118,26 @@ const EditPage = () => {
             />
           </h1>
           <CategoryContainer>
-            <InputCategory
-              placeholder="카테고리를 입력하세요"
-              name="category"
-              value={category}
-              onChange={onChange}
-            />
-            <Select>
-              <option>카테고리 선택</option>
-              <option>자료구조</option>
-              <option>직접입력</option>
-            </Select>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                marginTop: "1rem",
+              }}
+            >
+              <InputCategory
+                placeholder="카테고리를 입력하세요"
+                name="category"
+                value={category}
+                onChange={onChange}
+              />
+              <Select
+                onChange={onChangeSelect}
+                ref={ref}
+                options={options}
+                styles={customStyles}
+              />
+            </div>
             <CategoryLine />
           </CategoryContainer>
         </TitleContainer>
@@ -113,7 +146,7 @@ const EditPage = () => {
             style={{
               // position: "fixed",
               // paddingTop: "10vh",
-              paddingTop: "6em",
+              paddingTop: "8.5rem",
               margin: "Button",
               width: "100%",
               height: "100%",

@@ -80,11 +80,11 @@ const ToastUIEditor = ({ form, setForm, onClickSubmit, id }) => {
   );
 
   return (
-    <div style={{ paddingLeft: "1.75vw", paddingRight: "1.75vw" }}>
+    <div>
       <Editor
         initialValue="hello react editor world!"
         previewStyle="vertical"
-        height="75vh"
+        height="78vh"
         // height="40rem"
         // height="0em"
         initialEditType="markdown"

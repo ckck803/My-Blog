@@ -5,24 +5,21 @@ export const TitleContainer = styled.div`
 
   padding-top: 1rem;
   padding-bottom: 1rem;
-  padding-right: 1.75vw;
-  padding-left: 1.75vw;
+  padding-right: 1vw;
+  padding-left: 1vw;
   /* padding-right: 2rem;
   padding-left: 2rem; */
   height: 2.75rem; ;
 `;
 
 export const CategoryContainer = styled.div`
-  padding-right: 2rem;
-  /* padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
-  height: 2.75rem; ; */
+  padding-left: 1rem;
+  /* display: flex;
+  flex-wrap: wrap; */
 `;
 
 export const InputBorder = styled.span`
-  border-left: 5px solid rgb(200, 206, 212);
+  border-right: 5px solid rgb(200, 206, 212);
   /* line-height: 2em; */
   /* height: 100%; */
 `;
@@ -34,7 +31,7 @@ export const InputTitle = styled.input`
   border: 1px solid rgb(0, 0, 0, 0);
   width: 900px;
 
-  font-size: 2.75rem;
+  font-size: 3.5rem;
   &:active,
   &:focus {
     outline: none;
@@ -42,13 +39,9 @@ export const InputTitle = styled.input`
 `;
 
 export const InputCategory = styled.input`
-  padding: 0.2em 0.2em 0.2em 0.2em;
-
   border: 1px solid rgb(0, 0, 0, 0);
-  width: 230px;
-  height: 100%;
-
-  font-size: 1.17rem;
+  width: 250px;
+  font-size: 1.5rem;
 
   &:active,
   &:focus {
@@ -57,7 +50,9 @@ export const InputCategory = styled.input`
 `;
 
 export const CategoryLine = styled.div`
-  width: 220px;
+  /* padding */
+  width: 240px;
+
   border-top: 1.5px solid rgb(200, 206, 212);
 `;
 
