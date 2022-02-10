@@ -39,8 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
-        log.info("HTTP Method = {}, Request URL = {}", request.getMethod(),request.getRequestURL());
         if(!skipJwtAuthenticationMatcher.matches(request) &&
                 !PathRequest.toStaticResources().atCommonLocations().matches(request)) {
             String token = "";
