@@ -28,7 +28,6 @@ const LoginModal = ({ isLoginOpen, onClickLogin }) => {
 
   const dispatch = useDispatch();
   const onLoginEvnet = (e) => {
-    console.log(form);
     dispatch(loginRequest(form));
     onClickLogin();
   };

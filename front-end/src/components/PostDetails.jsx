@@ -11,6 +11,7 @@ const PostDetails = ({ id }) => {
   const post = useSelector((state) =>
     state.postList.posts.find((post) => post.id === Number(id))
   );
+  const token = useSelector((state) => state.auth.token);
 
   const TimeLine = ({ post }) => {
     const createdTime = new Date(post);
@@ -35,21 +36,23 @@ const PostDetails = ({ id }) => {
         <div>
           <h1 className="mt-4">{post.title}</h1>
           <p className="lead">{post.subtitle}</p>
-          <div className="float-right">
-            <Link to={"/edit/" + post.id} className="btn btn-sm">
-              수정
-            </Link>
-            <div to={"/delete/" + post.id} className="btn btn-sm ">
-              삭제
+          {token && (
+            <div className="float-right">
+              <Link to={"/edit/" + post.id} className="btn btn-sm">
+                수정
+              </Link>
+              <div to={"/delete/" + post.id} className="btn btn-sm ">
+                삭제
+              </div>
             </div>
-          </div>
+          )}
           <h6 style={{ fontSize: "15px" }}>Category : {post.category}</h6>
           <hr />
           <TimeLine post={post.createdTime} />
           <hr />
           <ReactMarkdown
             parserOptions={{ commonmark: true }}
-            escapeHtml={false}
+            // escapeHtml={false}
             rehypePlugins={[rehypeRaw]}
             remarkPlugins={[remarkGfm]}
             children={post.content}

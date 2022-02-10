@@ -7,12 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPostListRequest } from "../redux/reducer/PostListReducer";
 import getPostList from "../components/getPostList";
 import { useEffect } from "react";
+import { Cookies } from "react-cookie";
 
 // initPostList();
 
 const MainPage = () => {
   const location = useLocation();
-
   const queryData = QueryString.parse(location.search, {
     ignoreQueryPrefix: true,
   });

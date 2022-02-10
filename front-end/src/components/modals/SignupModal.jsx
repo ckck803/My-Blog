@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useState } from "react";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { ModalBox } from "../../assets/css/login";
 import { Nav, NavLink } from "reactstrap";
 import {
@@ -8,6 +8,7 @@ import {
   SignUpFooter,
   SignUpHeader,
 } from "../../assets/css/signup";
+import { signupRequest } from "../../redux/reducer/AuthReducer";
 
 const SignupModal = ({ isSingupOpen, onClickSignup }) => {
   const [form, setForm] = useState({
@@ -32,12 +33,12 @@ const SignupModal = ({ isSingupOpen, onClickSignup }) => {
   //   });
   // }, [form]);
 
-  // const dispatch = useDispatch();
-  const onClickSignUp = useCallback(() => {
+  const dispatch = useDispatch();
+  const onSignupEvent = (e) => {
     console.log("onClickSignUp");
-    // dispatch(signupRequest(form));
-    onClickSignUp();
-  }, [form]);
+    dispatch(signupRequest(form));
+    onClickSignup();
+  };
 
   return (
     <Nav className="nav-item ml-auto d-felx">
@@ -84,7 +85,7 @@ const SignupModal = ({ isSingupOpen, onClickSignup }) => {
               </div>
             </SignUpBody>
             <SignUpFooter>
-              <button onClick={onClickSignUp}>회원가입</button>
+              <button onClick={onSignupEvent}>회원가입</button>
             </SignUpFooter>
           </ModalBox>
         </ModalBackGround>

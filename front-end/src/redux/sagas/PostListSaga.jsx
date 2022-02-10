@@ -16,6 +16,7 @@ import {
   POST_NEXT_REQUEST,
 } from "../type";
 dotenv.config();
+
 const getPostListAPI = (paging) => {
   const config = {
     headers: {
@@ -26,9 +27,15 @@ const getPostListAPI = (paging) => {
       size: paging.size,
     },
   };
+
+  axios.defaults.withCredentials = true;
+  axios.defaults.xsrfCookieName = "XSRF-TOKEN";
+
   const postList = axios
     .get(process.env.REACT_APP_POST_LIST_API_URL, config)
     .then((Response) => {
+      console.log(Response.config.xsrfCookieName);
+      console.log(Response);
       return Response.data;
     })
     .catch((err) => {

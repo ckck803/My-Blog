@@ -17,6 +17,7 @@ import {
   TitleContainer,
 } from "../assets/css/editor";
 import Select from "react-select";
+import CustomSelect from "../components/custom/CustomSelect";
 
 dotenv.config();
 
@@ -44,7 +45,7 @@ const EditPage = () => {
   const post = useSelector((state) =>
     state.postList.posts.find((post) => post.id === Number(id))
   );
-  const ref = useRef();
+  const [selected, setSelected] = useState("Choose One");
 
   const [form, setForm] = useState({
     title: "",
@@ -131,12 +132,7 @@ const EditPage = () => {
                 value={category}
                 onChange={onChange}
               />
-              <Select
-                onChange={onChangeSelect}
-                ref={ref}
-                options={options}
-                styles={customStyles}
-              />
+              <CustomSelect selected={selected} setSelected={setSelected} />
             </div>
             <CategoryLine />
           </CategoryContainer>
