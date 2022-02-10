@@ -36,6 +36,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -132,6 +133,7 @@ class PostControllerTest {
         String requestBody = objectMapper.writeValueAsString(requestPostDto);
 
         ResultActions resultActions = mockMvc.perform(post("/api/post/new")
+                .with(csrf())
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -170,6 +172,7 @@ class PostControllerTest {
 
         ResultActions resultActions = mockMvc.perform(post("/api/post/new")
                 .content(requestBody)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -185,7 +188,8 @@ class PostControllerTest {
     void deletePostTest() throws Exception {
         Long id = 1L;
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/post/delete/" + id));
+        ResultActions resultActions = mockMvc.perform(delete("/api/post/delete/" + id)
+                .with(csrf()));
 
         resultActions
                 .andExpect(status().isOk())
