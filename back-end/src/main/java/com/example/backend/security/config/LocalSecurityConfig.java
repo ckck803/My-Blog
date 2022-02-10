@@ -76,14 +76,13 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("excludedUrls : {}", excludedUrls());
 
         http
-//                .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .headers().frameOptions().disable();
 
         http
-                .csrf().disable()
-//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                .csrf().disable()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 ;
 
         http

@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        log.info("Request URL = {}", request.getRequestURL());
+        log.info("HTTP Method = {}, Request URL = {}", request.getMethod(),request.getRequestURL());
         if(!skipJwtAuthenticationMatcher.matches(request) &&
                 !PathRequest.toStaticResources().atCommonLocations().matches(request)) {
             String token = "";
@@ -68,14 +68,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             skipResources = pathsToSkip.stream()
                     .map(this::getAntPathRequestMatcher)
                     .collect(Collectors.toList());
-            addStaticResources();
+//            addStaticResources();
             skipMatchers = new OrRequestMatcher(skipResources);
         }
 
-        private void addStaticResources() {
-             this.skipResources.addAll(
-                    Arrays.asList(PathRequest.toStaticResources().atCommonLocations()));
-        }
+//        private void addStaticResources() {
+//             this.skipResources.addAll(
+//                    Arrays.asList(PathRequest.toStaticResources().atCommonLocations()));
+//        }
 
         private AntPathRequestMatcher getAntPathRequestMatcher(String info) {
             String[] methodAndPath = info.split(" ");

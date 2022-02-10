@@ -29,8 +29,6 @@ public class UserInfoService {
                     .userRole(Role.READ)
                     .build();
 
-            System.out.println("userInfo = " + userInfo.toString());
-
             return userInfoRepository.save(userInfo);
         }catch (Exception e){
             throw new IllegalStateException("저장에 실패 했습니다.");

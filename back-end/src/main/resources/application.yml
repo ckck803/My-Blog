@@ -23,10 +23,12 @@ security:
     token-validity-in-seconds: 86400000
   exclude:
     url:
-#      - GET /h2-console/**
+      - GET /h2-console/**
+      - POST /h2-console/**
       - POST /api/auth/signup
       - GET /api/auth/logout
       - GET /api/post/**
+      - GET /api/file/**
 #      - /static/**
 #      - /css/**
 #      - /js/**
