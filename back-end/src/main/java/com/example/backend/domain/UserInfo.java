@@ -30,6 +30,7 @@ public class UserInfo extends BaseEntity {
     private Role userRole;
 
     @Column(name = "state", nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
     private boolean state;
 
     @Builder
@@ -49,5 +50,18 @@ public class UserInfo extends BaseEntity {
     public UserInfo changeRole(Role role){
         this.userRole = role;
         return this;
+    }
+}
+
+@Converter
+class BooleanToYNConverter implements AttributeConverter<Boolean, String>{
+    @Override
+    public String convertToDatabaseColumn(Boolean attribute){
+        return (attribute != null && attribute) ? "Y" : "N";
+    }
+
+    @Override
+    public Boolean convertToEntityAttribute(String dbData){
+        return "Y".equals(dbData);
     }
 }

@@ -25,6 +25,7 @@ public class JsonAuthenticationProvider implements AuthenticationProvider {
         UserDetails loadUserByUsername = userDetailsService.loadUserByUsername(email);
 
         if(!passwordEncoder.matches(password, loadUserByUsername.getPassword())){
+            log.info("비밀번호가 일치하지 않습니다.");
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
