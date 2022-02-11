@@ -46,14 +46,14 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          PID=`$(ps -ef | grep java | grep back-end | awk '{print $2}')`
+          PID=`ps -ef | grep java | grep back-end | awk '{print $2}'`
           echo $PID
           if [ -z "$PID" ]; then
-            echo "> 실행중인 프로그램이 없습니다."
-          else
             echo "> 실행중인 프로그램을 종료합니다."
             echo "> kill -9 $PID"
             kill -9 $PID
+          else
+            echo "> 실행중인 프로그램이 없습니다."
           fi
 
     - name: Deploy Remote Serve
@@ -64,7 +64,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         source: "back-end/build/libs/*.jar"
-        target: "blog/"
+        target: "myblog/"
         strip_components: 3
         # script: whoami
 
