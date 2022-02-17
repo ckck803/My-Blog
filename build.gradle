@@ -33,6 +33,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
+
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -53,6 +54,10 @@ dependencies {
 //    // Session - Redis
 //    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 //    implementation 'org.springframework.session:spring-session-data-redis'
+
+    // https://mvnrepository.com/artifact/com.googlecode.log4jdbc/log4jdbc
+    implementation group: 'com.googlecode.log4jdbc', name: 'log4jdbc', version: '1.2'
+
 }
 
 test {

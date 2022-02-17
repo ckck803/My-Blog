@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.domain.FileName;
 import com.example.backend.repository.FileNameRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileNameService {
 
     @Value("${file.path}")
@@ -39,6 +41,7 @@ public class FileNameService {
         String uploadPath = filePath + storedFileName;
 
         try{
+            log.info("file stored at : {}", uploadPath);
             multipartFile.transferTo(Paths.get(uploadPath));
         } catch (IOException e) {
             e.printStackTrace();

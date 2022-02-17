@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -112,6 +114,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().configurationSource(corsConfigurationSource());
     }
 
+    @Bean
+    public RoleHierarchy roleHierarchy(){
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String[] roles = Arrays.stream(Role.values()).map(Role::getRole).toArray(String[]::new);
+        StringBuilder roleHierarchyString = new StringBuilder();
+        for(int i=0; i<roles.length; i++){
+            if(i!= 0){
+                roleHierarchyString.append(">");
+            }
+            roleHierarchyString.append(roles[i]);
+        }
+
+        roleHierarchy.setHierarchy(roleHierarchyString.toString());
+        return roleHierarchy;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

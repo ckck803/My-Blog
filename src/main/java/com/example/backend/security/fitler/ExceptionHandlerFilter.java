@@ -28,7 +28,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (RuntimeException e) {
-            log.info("Request Access Denied : {} result code : {}", request.getRequestURL(), response.getStatus());
             String message = "Access Denied";
 
             ExceptionResponse exceptionResponse =
@@ -36,6 +35,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.getWriter().write(convertObjectToJson(exceptionResponse));
+
+            log.info("Request Access Denied : {} result code : {}", request.getRequestURL(), response.getStatus());
         }
     }
 

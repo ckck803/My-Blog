@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-    READ("ROLE_READ"), WRITE("ROLE_WRITE"), ADMIN("ROLE_ADMIN");
+
+    ADMIN("ROLE_ADMIN"),
+    WRITE("ROLE_WRITE"),
+    READ("ROLE_READ");
 
     private final String role;
 }

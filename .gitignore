@@ -1,2 +1,50 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-back-end/src/main/resources/application-prod.yml
+**/application-mysql.yml
+**/application-prod.yml
+**/application-security.yml
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+.logs/**
+
+logs/Myblog-Backend.log
+
+logs/Myblog-Backend.log.2022-02-12.0.gz
+
+logs/Myblog-Backend.log.2022-02-15.0.gz
+
+logs/Myblog-Backend.log.2022-02-16.0.gz

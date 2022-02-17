@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 @Profile("local")
 @Order(0)
@@ -68,7 +70,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .requestMatchers(PathRequest.toH2Console());
     }
 
     @Override
@@ -81,8 +84,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
 
         http
-//                .csrf().disable()
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrf().disable()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 ;
 
         http
@@ -125,6 +128,23 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     @ConfigurationProperties(prefix = "security.exclude.url")
     public List<String> excludedUrls() {
         return new ArrayList<>();
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy(){
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String[] roles = Arrays.stream(Role.values()).map(Role::getRole).toArray(String[]::new);
+        StringBuilder roleHierarchyString = new StringBuilder();
+        for(int i=0; i<roles.length; i++){
+            if(i!= 0){
+                roleHierarchyString.append(">");
+            }
+            roleHierarchyString.append(roles[i]);
+        }
+
+        roleHierarchy.setHierarchy(roleHierarchyString.toString());
+        log.info("roleHierarchyString = {}", roleHierarchyString.toString());
+        return roleHierarchy;
     }
 
     @Bean

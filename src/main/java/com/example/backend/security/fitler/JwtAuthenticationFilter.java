@@ -1,6 +1,8 @@
 package com.example.backend.security.fitler;
 
+import com.example.backend.advice.dto.ExceptionResponse;
 import com.example.backend.security.utils.JwtUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest;
@@ -19,7 +21,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +56,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtUtils.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+
+//            try {
+//                if (token != null && jwtUtils.validateToken(token)) {
+//                    Authentication authentication = jwtUtils.getAuthentication(token);
+//                    SecurityContextHolder.getContext().setAuthentication(authentication);
+//                }
+//            }catch (Exception ex){
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//                response.getWriter().write(objectMapper.writeValueAsString(
+//                        new ExceptionResponse(new Date(), ex.getMessage(), "Access Denied")
+//                ));
+//            }
         }
 
         filterChain.doFilter(request, response);
