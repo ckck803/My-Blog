@@ -40,11 +40,8 @@ out/
 ### VS Code ###
 .vscode/
 .logs/**
-
-logs/Myblog-Backend.log
-
-logs/Myblog-Backend.log.2022-02-12.0.gz
-
-logs/Myblog-Backend.log.2022-02-15.0.gz
-
-logs/Myblog-Backend.log.2022-02-16.0.gz
+*.log
+**/*.log
+**/.DS_Store
+/logs/**
+.DS_Store
