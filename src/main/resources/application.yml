@@ -2,10 +2,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-#    properties:
-#      hibernate:
-#        show_sql: true
-#        format_sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
   config:
     import:
       - classpath:/log4jdbc.log4j2.properties

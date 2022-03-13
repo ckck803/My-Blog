@@ -18,7 +18,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.log.LogMessage;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -63,6 +66,20 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(jsonAuthenticationProvider())
                 .userDetailsService(userInfoUserDetailsService)
                 .passwordEncoder(passwordEncoder());
+
+        auth
+                .inMemoryAuthentication()
+                .withUser("user")
+                .password(passwordEncoder().encode("1234"))
+                .roles("READ")
+                .and()
+                .withUser("manager")
+                .password(passwordEncoder().encode("1234"))
+                .roles("MANAGER")
+                .and()
+                .withUser("admin")
+                .password(passwordEncoder().encode("1234"))
+                .roles("ADMIN");
     }
 
 
@@ -70,8 +87,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers(PathRequest.toH2Console());
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+//                .requestMatchers(PathRequest.toH2Console());
     }
 
     @Override
@@ -86,7 +103,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                ;
+        ;
 
         http
                 .authorizeRequests()
@@ -122,6 +139,18 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .cors().configurationSource(corsConfigurationSource());
+
+        http
+                .exceptionHandling()
+                .accessDeniedHandler((request, response, exception) -> {
+                    if (response.isCommitted()) {
+                        log.info("Did not write to response since already committed");
+                        return;
+                    }
+                    response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
+                    log.info("Request Authorization Denied : {} result code : {}", request.getRequestURL(), response.getStatus());
+                    return;
+                });
     }
 
     @Bean(name = "excludedUrls")
@@ -131,12 +160,15 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public RoleHierarchy roleHierarchy(){
+    public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String[] roles = Arrays.stream(Role.values()).map(Role::getRole).toArray(String[]::new);
+        String[] roles = Arrays.stream(Role.values())
+                .map(Role::getRole)
+                .toArray(String[]::new);
+
         StringBuilder roleHierarchyString = new StringBuilder();
-        for(int i=0; i<roles.length; i++){
-            if(i!= 0){
+        for (int i = 0; i < roles.length; i++) {
+            if (i != 0) {
                 roleHierarchyString.append(">");
             }
             roleHierarchyString.append(roles[i]);
