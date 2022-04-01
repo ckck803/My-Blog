@@ -17,7 +17,6 @@ class PostTest {
 
     @Autowired
     private PostRepository postRepository;
-
     @Autowired
     private UserInfoRepository userInfoRepository;
 
@@ -39,12 +38,13 @@ class PostTest {
                 .email("test@test.com")
                 .build();
 
+        UserInfo savedUserInfo = userInfoRepository.save(userInfo);
 
         Post post = Post.builder()
                 .title(title)
                 .subTitle(subTitle)
                 .category(category)
-                .author(userInfo)
+                .author(savedUserInfo)
                 .content(content)
                 .build();
 
