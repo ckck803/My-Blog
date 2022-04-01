@@ -206,7 +206,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JsonAuthenticationProvider jsonAuthenticationProvider() {
-        return new JsonAuthenticationProvider(passwordEncoder(), userDetailsService());
+        return new JsonAuthenticationProvider(passwordEncoder(), userInfoUserDetailsService);
     }
 
     @Bean

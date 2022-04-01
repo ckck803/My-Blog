@@ -31,7 +31,7 @@ public class Post extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinColumn(name = "AUTHOR_ID", nullable = true)
+    @JoinColumn(name = "username", nullable = false, referencedColumnName = "username")
     private UserInfo author;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,6 +44,10 @@ public class Post extends BaseEntity{
         this.category = category;
         // 새로운 카테고리에 해당 포스트 추가
         category.addPost(this);
+    }
+
+    public void setAuthor(UserInfo author){
+        this.author = author;
     }
 
     public Post updatePost(Post post) {

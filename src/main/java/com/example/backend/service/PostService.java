@@ -1,15 +1,17 @@
 package com.example.backend.service;
 
 import com.example.backend.domain.Post;
-import com.example.backend.exception.PostDeleteFailException;
-import com.example.backend.exception.PostRetrieveFailException;
-import com.example.backend.exception.PostSaveFailException;
-import com.example.backend.exception.PostUpdateFailException;
+import com.example.backend.domain.UserInfo;
+import com.example.backend.exception.*;
 import com.example.backend.repository.PostRepository;
+import com.example.backend.repository.UserInfoRepository;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +20,23 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+
+    private final UserInfoRepository userInfoRepository;
     private final PostRepository postRepository;
 
     public Post savePost(Post post) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String email = userDetails.getUsername();
+            Optional<UserInfo> optionalUserInfo = userInfoRepository.findUserInfoByEmail(email);
+
+            if(optionalUserInfo.isEmpty()){
+                throw new NotAuthenticatedUser("회원 정보가 없습니다.");
+            }
+            UserInfo userInfo = optionalUserInfo.get();
+            post.setAuthor(userInfo);
+
             return postRepository.save(post);
         }catch (Exception e){
             throw new PostSaveFailException("포스트를 저장하는데 실패 했습니다. 원인 : " + e.getMessage());

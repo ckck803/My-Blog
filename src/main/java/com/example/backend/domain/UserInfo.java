@@ -5,10 +5,10 @@ import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @ToString
 public class UserInfo extends BaseEntity {
@@ -28,6 +28,10 @@ public class UserInfo extends BaseEntity {
     @Column(name = "USERROLE", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role userRole;
+
+    @Column(name = "post", nullable = true)
+    @OneToMany(mappedBy = "author")
+    private List<Post> posts;
 
     @Column(name = "state", nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
