@@ -34,6 +34,5 @@ public class JsonAuthenticationFailureHandler implements AuthenticationFailureHa
         }
 
         objectMapper.writeValue(response.getWriter(), "Authentication failed");
-
     }
 }

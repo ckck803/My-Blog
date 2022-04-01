@@ -6,6 +6,7 @@ import com.example.backend.domain.enums.Role;
 import com.example.backend.exception.NotAuthenticatedUser;
 import com.example.backend.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserInfoUserDetailsService implements UserDetailsService {
 
     private final UserInfoRepository userInfoRepository;
@@ -37,6 +39,7 @@ public class UserInfoUserDetailsService implements UserDetailsService {
 
         UserInfo userInfo = optional.get();
         if(userInfo.isState() == false){
+            log.info("승인이 필요한 사용자 입니다. email : {}", "승인이 필요한 사용자 입니다.");
             throw new NotAuthenticatedUser("승인이 필요한 사용자 입니다.");
         }
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userInfo.getUserRole().getRole());

@@ -43,7 +43,7 @@ public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFi
             throw new IllegalStateException("Content Type is not Application/json");
         }
 
-        LoginDto loginDto;
+        LoginDto loginDto = null;
 
         try{
             loginDto = objectMapper.readValue(request.getReader(), LoginDto.class);
