@@ -6,7 +6,6 @@ build/
 !**/src/test/**/build/
 
 **/application-mysql.yml
-**/application-prod.yml
 **/application-security.yml
 
 ### STS ###
