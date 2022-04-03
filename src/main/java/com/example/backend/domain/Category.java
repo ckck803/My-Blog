@@ -8,9 +8,8 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
+@ToString
 public class Category extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +19,18 @@ public class Category extends BaseEntity{
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
-    public Category addPost(Post post){
-        if(posts == null){
-            posts = new ArrayList<>();
-        }
-        posts.add(post);
-        return this;
+//    public Category addPost(Post post){
+////        if(posts == null){
+////            posts = new ArrayList<>();
+////        }
+//        posts.add(post);
+//        return this;
+//    }
+    @Builder
+    public Category(String name){
+        this.name = name;
+        this.posts = new ArrayList<>();
     }
 }

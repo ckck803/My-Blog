@@ -5,6 +5,7 @@ import com.example.backend.domain.UserInfo;
 import com.example.backend.domain.enums.Role;
 import com.example.backend.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserInfoService {
 
     private final PasswordEncoder passwordEncoder;
@@ -31,7 +33,8 @@ public class UserInfoService {
 
             return userInfoRepository.save(userInfo);
         }catch (Exception e){
-            throw new IllegalStateException("저장에 실패 했습니다.");
+            log.info("사용자 저장에 실패 했습니다. {}", e.getMessage());
+            throw new IllegalStateException("사용자 저장에 실패 했습니다.");
         }
     }
 

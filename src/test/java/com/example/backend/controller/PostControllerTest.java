@@ -111,12 +111,10 @@ class PostControllerTest {
 
         Category beforeCategory = Category.builder()
                 .name(beforeCategoryName)
-                .posts(new ArrayList<>())
                 .build();
 
         Category afterCategory = Category.builder()
                 .name(afterCategoryName)
-                .posts(new ArrayList<>())
                 .build();
 
         Post post = Post.builder()
@@ -128,7 +126,7 @@ class PostControllerTest {
                 .build();
 
         given(categoryService.saveOrFindCategory(afterCategoryName)).willReturn(afterCategory);
-        given(postService.savePost(any(Post.class))).willReturn(post);
+        given(postService.savePost(any(RequestPostDto.class))).willReturn(post);
 
         String requestBody = objectMapper.writeValueAsString(requestPostDto);
 
@@ -142,7 +140,7 @@ class PostControllerTest {
                 .andExpect(status().isCreated())
                 .andDo(print());
 
-        verify(postService).savePost(any(Post.class));
+        verify(postService).savePost(any(RequestPostDto.class));
     }
 
     @Test
@@ -161,12 +159,11 @@ class PostControllerTest {
 
         Category afterCategory = Category.builder()
                 .name(afterCategoryName)
-                .posts(new ArrayList<>())
                 .build();
 
 
         given(categoryService.saveOrFindCategory(afterCategoryName)).willReturn(afterCategory);
-        given(postService.savePost(any(Post.class))).willThrow(PostSaveFailException.class);
+        given(postService.savePost(any(RequestPostDto.class))).willThrow(PostSaveFailException.class);
 
         String requestBody = objectMapper.writeValueAsString(requestPostDto);
 
@@ -180,7 +177,7 @@ class PostControllerTest {
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(postService).savePost(any(Post.class));
+        verify(postService).savePost(any(RequestPostDto.class));
     }
 
     @Test

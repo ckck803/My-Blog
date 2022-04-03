@@ -1,6 +1,8 @@
 package com.example.backend.controller.dto;
 
+import com.example.backend.domain.Post;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 @Builder
 public class ResponsePostDto {
 
@@ -24,4 +27,15 @@ public class ResponsePostDto {
     private LocalDateTime createdTime;
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime lastModifiedTime;
+
+    public ResponsePostDto(Post post){
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.subTitle = post.getSubTitle();
+        this.content = post.getContent();
+        this.author = post.getAuthor().getUsername();
+        this.category = post.getCategory().getName();
+        this.createdTime = post.getCreatedTime();
+        this.lastModifiedTime = post.getLastModifiedTime();
+    }
 }

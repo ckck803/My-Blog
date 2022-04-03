@@ -31,6 +31,7 @@ security:
       - GET /api/auth/logout
       - GET /api/post/**
       - GET /api/file/**
+      - GET /api/category/**
       - /swagger-resources/**
       - /swagger-ui/**
       - /v3/**

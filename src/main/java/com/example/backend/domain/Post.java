@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 @Entity
@@ -14,7 +15,8 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post extends BaseEntity{
+public class Post extends BaseEntityWithUserInfo{
+//public class Post extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -30,12 +32,10 @@ public class Post extends BaseEntity{
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name = "username", nullable = false, referencedColumnName = "username")
     private UserInfo author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name = "CATEGORY", nullable = true, referencedColumnName = "CATEGORY_NAME")
     private Category category;
 
@@ -43,11 +43,12 @@ public class Post extends BaseEntity{
     public void changeCategory(Category category){
         this.category = category;
         // 새로운 카테고리에 해당 포스트 추가
-        category.addPost(this);
+        category.getPosts().add(this);
     }
 
     public void setAuthor(UserInfo author){
         this.author = author;
+        author.getPosts().add(this);
     }
 
     public Post updatePost(Post post) {

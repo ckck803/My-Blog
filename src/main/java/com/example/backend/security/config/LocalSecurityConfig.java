@@ -66,20 +66,6 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(jsonAuthenticationProvider())
                 .userDetailsService(userInfoUserDetailsService)
                 .passwordEncoder(passwordEncoder());
-
-        auth
-                .inMemoryAuthentication()
-                .withUser("user")
-                .password(passwordEncoder().encode("1234"))
-                .roles("READ")
-                .and()
-                .withUser("manager")
-                .password(passwordEncoder().encode("1234"))
-                .roles("MANAGER")
-                .and()
-                .withUser("admin")
-                .password(passwordEncoder().encode("1234"))
-                .roles("ADMIN");
     }
 
 
@@ -101,9 +87,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
 
         http
-                .csrf().disable()
-//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        ;
+                .csrf().disable();
 
         http
                 .authorizeRequests()
@@ -120,7 +104,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/post/new").hasRole(Role.WRITE.name())
                 .antMatchers(HttpMethod.PATCH, "/api/post/update/**").hasRole(Role.WRITE.name())
                 .antMatchers(HttpMethod.DELETE, "/api/post/delete/**").hasRole(Role.WRITE.name())
-                .antMatchers(HttpMethod.GET, "/api/post/**").permitAll();
+                .antMatchers(HttpMethod.GET, "/api/post/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/category/**").permitAll();
 
         http
                 .authorizeRequests()
