@@ -18,7 +18,6 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-//public class Post extends BaseEntityWithUserInfo{
 public class Post extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

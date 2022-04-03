@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,9 +38,9 @@ public class FileNameService {
     }
 
     public String saveFile(MultipartFile multipartFile){
-        String originalFileName = multipartFile.getOriginalFilename();
-        String storedFileName = getStoredFileName(originalFileName);
-        String uploadPath = filePath + storedFileName;
+        String originalFilename = multipartFile.getOriginalFilename();
+        String storedFilename = getStoredFileName(originalFilename);
+        String uploadPath = filePath + storedFilename;
 
         try{
             log.info("file stored at : {}", uploadPath);
@@ -48,16 +50,22 @@ public class FileNameService {
         }
 
         FileName fileName = FileName.builder()
-                .originalFileName(originalFileName)
-                .storedFileName(storedFileName)
+                .originalFileName(originalFilename)
+                .storedFileName(storedFilename)
                 .build();
 
         fileNameRepository.save(fileName);
 
-        return storedFileName;
+        return storedFilename;
     }
 
-    public FileName getOriginalFileName(String storedFileName){
+    public void deleteFileByStoredFilename(String storedFilename) throws IOException {
+        String storedFilePath = filePath + storedFilename;
+        Path path = Paths.get(storedFilePath);
+        Files.delete(path);
+    }
+
+    private FileName getOriginalFileName(String storedFileName){
         Optional<FileName> optional = fileNameRepository.findFileNameByStoredFileName(storedFileName);
 
         if(optional.isPresent()){
