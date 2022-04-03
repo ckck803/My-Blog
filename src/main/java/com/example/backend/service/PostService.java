@@ -1,5 +1,7 @@
 package com.example.backend.service;
 
+import com.example.backend.controller.dto.RequestPostDto;
+import com.example.backend.domain.Category;
 import com.example.backend.domain.Post;
 import com.example.backend.domain.UserInfo;
 import com.example.backend.exception.*;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,18 +27,19 @@ public class PostService {
     private final UserInfoRepository userInfoRepository;
     private final PostRepository postRepository;
 
-    public Post savePost(Post post) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String email = userDetails.getUsername();
-            Optional<UserInfo> optionalUserInfo = userInfoRepository.findUserInfoByEmail(email);
+    private final CategoryService categoryService;
 
-            if(optionalUserInfo.isEmpty()){
-                throw new NotAuthenticatedUser("회원 정보가 없습니다.");
-            }
-            UserInfo userInfo = optionalUserInfo.get();
-            post.setAuthor(userInfo);
+    @Transactional
+    public Post savePost(RequestPostDto requestPostDto) {
+        try {
+            Category category = categoryService.saveOrFindCategory(requestPostDto.getCategory());
+
+            Post post = Post.builder()
+                    .title(requestPostDto.getTitle())
+                    .subTitle(requestPostDto.getSubTitle())
+                    .content(requestPostDto.getContent())
+                    .build();
+            post.changeCategory(category);
 
             return postRepository.save(post);
         }catch (Exception e){
@@ -47,6 +51,7 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
+    @Transactional
     public void deletePost(Long id) {
         try {
             postRepository.deleteById(id);
@@ -55,6 +60,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public Post updatePost(Long id, Post post) {
         Optional<Post> optional = postRepository.findById(id);
 

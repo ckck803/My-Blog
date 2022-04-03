@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -46,46 +47,15 @@ public class PostController {
             return ResponseEntity.ok().build();
         }
 
-        List<ResponsePostDto> postList = new ArrayList<>();
-        for (Post post : allPosts) {
-            ResponsePostDto postDto = ResponsePostDto.builder()
-                    .id(post.getId())
-                    .title(post.getTitle())
-                    .subTitle(post.getSubTitle())
-                    .content(post.getContent())
-                    .author(post.getAuthor().getUsername())
-                    .category(post.getCategory().getName())
-                    .createdTime(post.getCreatedTime())
-                    .lastModifiedTime(post.getLastModifiedTime())
-                    .build();
-            postList.add(postDto);
-        }
-
-        ResponsePostListDto postListDto = ResponsePostListDto
-                .builder()
-                .postList(postList)
-                .numOfElements(allPosts.getNumberOfElements())
-                .totalElements(allPosts.getTotalElements())
-                .pagingSize(allPosts.getSize())
-                .pageIndex(allPosts.getNumber())
-                .pageLimit(allPosts.getNumberOfElements()/allPosts.getSize())
-                .build();
+        ResponsePostListDto postListDto = new ResponsePostListDto(allPosts);
 
         return ResponseEntity.ok(postListDto);
     }
 
     @PostMapping("/new")
     public ResponseEntity createPost(@RequestBody RequestPostDto requestPostDto){
-        Category category = categoryService.saveOrFindCategory(requestPostDto.getCategory());
 
-        Post post = Post.builder()
-                .title(requestPostDto.getTitle())
-                .subTitle(requestPostDto.getSubTitle())
-                .content(requestPostDto.getContent())
-                .build();
-
-        post.changeCategory(category);
-        Post savedPost = postService.savePost(post);
+        Post savedPost = postService.savePost(requestPostDto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -96,26 +66,12 @@ public class PostController {
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity retrievePost(@PathVariable("id") Long id){
+    public ResponseEntity<ResponsePostDto> retrievePost(@PathVariable("id") Long id){
         Post post = postService.getPost(id);
 
-        ResponsePostDto dto = ResponsePostDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .subTitle(post.getSubTitle())
-                .content(post.getContent())
-//                .author(post.getAuthor().getUsername())
-                .category(post.getCategory().getName())
-                .createdTime(post.getCreatedTime())
-                .lastModifiedTime(post.getLastModifiedTime())
-                .build();
-//
-//        URI url = ServletUriComponentsBuilder.fromCurrentRequest()
-//                .path("/{id}")
-//                .buildAndExpand(post.getId())
-//                .toUri();
-//
-        return ResponseEntity.ok(post);
+        ResponsePostDto dto = new ResponsePostDto(post);
+
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -127,11 +83,16 @@ public class PostController {
 
     @PatchMapping("/update/{id}")
     public ResponseEntity updatePost(@PathVariable("id") Long id, @RequestBody RequestPostDto requestPostDto){
+        String categoryName = requestPostDto.getCategory();
+        Category category = categoryService.saveOrFindCategory(categoryName);
+
         Post post = Post.builder()
                 .title(requestPostDto.getTitle())
                 .subTitle(requestPostDto.getSubTitle())
                 .content(requestPostDto.getContent())
+//                .category(category)
                 .build();
+        post.changeCategory(category);
 
         postService.updatePost(id, post);
 

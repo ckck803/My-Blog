@@ -1,18 +1,20 @@
 package com.example.backend.domain;
 
 import com.example.backend.domain.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
+//@NoArgsConstructor
 @Getter
 @ToString
 public class UserInfo extends BaseEntity {
-
+//public class UserInfo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -23,15 +25,22 @@ public class UserInfo extends BaseEntity {
     private String email;
 
     @Column(name = "PASSWORD", nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(name = "USERROLE", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role userRole;
 
-    @Column(name = "post", nullable = true)
-    @OneToMany(mappedBy = "author")
+
+    @Column(name = "posts", nullable = true)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Post> posts;
+
+    public UserInfo(){
+        this.posts = new ArrayList<>();
+    }
 
     @Column(name = "state", nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
@@ -44,6 +53,12 @@ public class UserInfo extends BaseEntity {
         this.password = password;
         this.userRole = userRole;
         this.state = false;
+        this.posts = new ArrayList<>();
+    }
+
+    public UserInfo addPost(Post post){
+        this.posts.add(post);
+        return this;
     }
 
     public UserInfo changeState(boolean isAuthenticated){

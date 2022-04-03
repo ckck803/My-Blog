@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -15,8 +17,9 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post extends BaseEntityWithUserInfo{
-//public class Post extends BaseEntity{
+@EntityListeners(AuditingEntityListener.class)
+//public class Post extends BaseEntityWithUserInfo{
+public class Post extends BaseEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -33,6 +36,7 @@ public class Post extends BaseEntityWithUserInfo{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false, referencedColumnName = "username")
+    @CreatedBy
     private UserInfo author;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,10 +50,10 @@ public class Post extends BaseEntityWithUserInfo{
         category.getPosts().add(this);
     }
 
-    public void setAuthor(UserInfo author){
-        this.author = author;
-        author.getPosts().add(this);
-    }
+//    public void setAuthor(UserInfo author){
+//        this.author = author;
+//        author.getPosts().add(this);
+//    }
 
     public Post updatePost(Post post) {
         this.title = post.title;
