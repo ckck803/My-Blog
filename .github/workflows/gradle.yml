@@ -30,13 +30,9 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-#      working-directory: ${{ env.working-directory }}
 
     - name: Build with Gradle
       run: ./gradlew clean build
-#      working-directory: ${{ env.working-directory }}
-      # with:
-      #   arguments: build
 
     - name: Stop Application
       uses: appleboy/ssh-action@v0.1.4
@@ -63,11 +59,9 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-#        source: "back-end/build/libs/*.jar"
-        source: "./build/libs/*.jar"
+        source: "build/libs/*.jar"
         target: "myblog/back-end/"
         strip_components: 2
-        # script: whoami
 
     - name: Run Application
       uses: appleboy/ssh-action@v0.1.4
