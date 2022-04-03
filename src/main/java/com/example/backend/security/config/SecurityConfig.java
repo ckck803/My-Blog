@@ -49,7 +49,7 @@ import java.util.List;
 @Profile("prod")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${security.url.login}")
+    @Value("${spring.security.url.login}")
     private String loginUrl;
 
     private final ObjectMapper objectMapper;
@@ -96,8 +96,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/api/post/new").hasRole(Role.WRITE.name())
                 .antMatchers(HttpMethod.PATCH,"/api/post/update/**").hasRole(Role.WRITE.name())
                 .antMatchers(HttpMethod.DELETE,"/api/post/delete/**").hasRole(Role.WRITE.name())
-//                .antMatchers(HttpMethod.GET,"/api/post/detail/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/post/**").permitAll();
+                .antMatchers(HttpMethod.GET,"/api/post/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/category/**").permitAll();
+
 
         http
                 .authorizeRequests()
@@ -152,7 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean (name = "excludedUrls")
-    @ConfigurationProperties( prefix = "security.exclude.url" )
+    @ConfigurationProperties( prefix = "spring.security.exclude.url" )
     public List<String> excludedUrls(){
         return new ArrayList<>();
     }

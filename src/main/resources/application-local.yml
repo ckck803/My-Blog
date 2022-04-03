@@ -11,3 +11,9 @@ spring:
     console:
       path: /h2-console
       enabled: true
+
+security:
+  jwt:
+    header: Token
+    secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
+    token-validity-in-seconds: 86400000

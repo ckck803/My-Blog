@@ -174,7 +174,7 @@ class PostControllerTest {
         );
 
         resultActions
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andDo(print());
 
         verify(postService).savePost(any(RequestPostDto.class));

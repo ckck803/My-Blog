@@ -23,7 +23,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        log.info("HTTP Method = {}, Request URL = {}", request.getMethod(),request.getRequestURL());
+//        log.info("HTTP Method = {}, Request URL = {}", request.getMethod(),request.getRequestURL());
 
         try {
             filterChain.doFilter(request, response);

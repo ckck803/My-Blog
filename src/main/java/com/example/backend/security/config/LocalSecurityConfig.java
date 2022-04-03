@@ -51,7 +51,7 @@ import java.util.List;
 @Slf4j
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${security.url.login}")
+    @Value("${spring.security.url.login}")
     private String loginUrl;
     private final ObjectMapper objectMapper;
     private final JwtUtils jwtUtils;
@@ -139,7 +139,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean(name = "excludedUrls")
-    @ConfigurationProperties(prefix = "security.exclude.url")
+    @ConfigurationProperties(prefix = "spring.security.exclude.url")
     public List<String> excludedUrls() {
         return new ArrayList<>();
     }

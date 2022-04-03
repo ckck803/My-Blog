@@ -11,30 +11,30 @@ spring:
       - classpath:/log4jdbc.log4j2.properties
       - classpath:/application-local.yml
 
+  security:
+    url:
+      login: /api/auth/login
+      signup: /api/auth/signup
+      logout: /api/auth/logout
+    jwt:
+      header: Token
+      secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
+      token-validity-in-seconds: 86400000
+    exclude:
+      url:
+        - GET /h2-console/**
+        - POST /h2-console/**
+        - POST /api/auth/signup
+        - GET /api/auth/logout
+        - GET /api/post/**
+        - GET /api/file/**
+        - GET /api/category/**
+        - /swagger-resources/**
+        - /swagger-ui/**
+        - /v3/**
+
 file:
   path: /Users/dongwoo-yang/spring-file/
-
-security:
-  url:
-    login: /api/auth/login
-    signup: /api/auth/signup
-    logout: /api/auth/logout
-  jwt:
-    header: Token
-    secret: spring-security-jwt-secret-key-my-blog-project-should-be-bigger-than-512bits
-    token-validity-in-seconds: 86400000
-  exclude:
-    url:
-      - GET /h2-console/**
-      - POST /h2-console/**
-      - POST /api/auth/signup
-      - GET /api/auth/logout
-      - GET /api/post/**
-      - GET /api/file/**
-      - GET /api/category/**
-      - /swagger-resources/**
-      - /swagger-ui/**
-      - /v3/**
 
 logging:
   file:
